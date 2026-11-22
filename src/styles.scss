@@ -1,0 +1,204 @@
+/* Thème global : sombre par défaut, clair si l'utilisateur le préfère. */
+:root {
+  --bg: #070a13;
+  --bg-soft: #0c1120;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #e8ebf5;
+  --muted: #9aa3bd;
+  --primary: #7c5cff;
+  --accent: #22d3ee;
+  --pink: #f472b6;
+  --gradient: linear-gradient(120deg, var(--primary), var(--accent));
+  --radius: 18px;
+  --shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+  --font: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --max: 1120px;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #f6f7fb;
+    --bg-soft: #ffffff;
+    --surface: rgba(10, 20, 50, 0.04);
+    --surface-strong: rgba(10, 20, 50, 0.07);
+    --border: rgba(10, 20, 50, 0.1);
+    --text: #0f1424;
+    --muted: #4f5874;
+    --shadow: 0 20px 50px -25px rgba(20, 30, 80, 0.35);
+    --accent: #0891b2;
+    --primary: #6d4aff;
+    color-scheme: light;
+  }
+}
+:root[data-theme='light'] {
+  --bg: #f6f7fb;
+  --bg-soft: #ffffff;
+  --surface: rgba(10, 20, 50, 0.04);
+  --surface-strong: rgba(10, 20, 50, 0.07);
+  --border: rgba(10, 20, 50, 0.1);
+  --text: #0f1424;
+  --muted: #4f5874;
+  --shadow: 0 20px 50px -25px rgba(20, 30, 80, 0.35);
+  --accent: #0891b2;
+  --primary: #6d4aff;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: rgba(124, 92, 255, 0.35);
+}
+
+.container {
+  width: min(var(--max), 100% - 32px);
+  margin-inline: auto;
+}
+
+.section {
+  padding: 96px 0;
+  position: relative;
+}
+
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+.card:hover {
+  border-color: rgba(124, 92, 255, 0.45);
+  background: var(--surface-strong);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 15px var(--font);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn-primary {
+  background: var(--gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 10px 30px -10px rgba(124, 92, 255, 0.7);
+}
+
+.todo {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Apparition au défilement (directive appReveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 72px 0;
+  }
+}
