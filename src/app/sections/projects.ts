@@ -213,6 +213,20 @@ import { SectionHeader } from '../shared/section-header';
       font-size: 14px;
       color: var(--text);
     }
+    /* Tablette (2 colonnes) : la dernière carte seule sur sa ligne prend toute la largeur */
+    @media (min-width: 761px) and (max-width: 975px) {
+      .project:not(.featured):last-child:nth-child(even) {
+        grid-column: 1 / -1;
+        flex-direction: row;
+      }
+      .project:not(.featured):last-child:nth-child(even) .banner {
+        flex: 0 0 38%;
+        height: auto;
+        min-height: 220px;
+        border-bottom: 0;
+        border-right: 1px solid var(--border);
+      }
+    }
     @media (max-width: 760px) {
       .featured {
         flex-direction: column;
