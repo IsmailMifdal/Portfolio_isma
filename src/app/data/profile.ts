@@ -57,7 +57,7 @@ export interface Profile {
   pitch: string;
   about: string[];
   stats: { value: string; label: string }[];
-  links: { github: string; linkedin?: string; email?: string; schoolEmail?: string; cv?: string };
+  links: { github: string; linkedin?: string; email?: string; schoolEmail?: string; phone?: string; cv?: string };
   experiences: Experience[];
   education: Education[];
   skillGroups: SkillGroup[];
@@ -101,7 +101,8 @@ export const PROFILE: Profile = {
     linkedin: 'https://www.linkedin.com/in/ismail-mifdal',
     email: 'ismailmifdal12@gmail.com',
     schoolEmail: 'ismail.mifdal@ynov.com',
-    cv: '',
+    phone: '+33 7 45 82 95 38',
+    cv: 'cv-ismail-mifdal.pdf',
   },
 
   experiences: [
@@ -251,7 +252,7 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     `# ${p.firstName} ${p.lastName} — ${p.title}`,
     `Localisation : ${todo(p.location)} | Disponibilité : ${todo(p.availability)}`,
     `Présentation : ${p.pitch} ${p.about.map(todo).join(' ')}`,
-    `Liens : GitHub ${p.links.github}${p.links.linkedin ? ` | LinkedIn ${p.links.linkedin}` : ''}${p.links.email ? ` | Email ${p.links.email}` : ''}${p.links.schoolEmail ? ` | Email école ${p.links.schoolEmail}` : ''}`,
+    `Liens : GitHub ${p.links.github}${p.links.linkedin ? ` | LinkedIn ${p.links.linkedin}` : ''}${p.links.email ? ` | Email ${p.links.email}` : ''}${p.links.schoolEmail ? ` | Email école ${p.links.schoolEmail}` : ''}${p.links.phone ? ` | Téléphone ${p.links.phone}` : ''}${p.links.cv ? ' | CV téléchargeable sur le site (bouton « Télécharger mon CV »)' : ''}`,
     '',
     '## Expériences professionnelles',
     ...p.experiences.map(

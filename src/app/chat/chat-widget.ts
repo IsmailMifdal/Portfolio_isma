@@ -13,8 +13,8 @@ import { ChatService } from './chat.service';
           <div class="who">
             <span class="avatar">✨</span>
             <div>
-              <strong>Assistant de {{ p.firstName }}</strong>
-              <small><span class="dot"></span>Répond sur mon parcours, mes compétences et mes projets</small>
+              <strong>Discuter avec {{ p.firstName }}</strong>
+              <small><span class="dot"></span>Mon parcours, mes compétences, mes projets</small>
             </div>
           </div>
           <div class="tools">
@@ -57,7 +57,7 @@ import { ChatService } from './chat.service';
           />
           <button type="submit" [disabled]="!draft().trim() || chat.loading()" aria-label="Envoyer">➤</button>
         </form>
-        <p class="disclaimer">Réponses générées par IA à partir du profil d'{{ p.firstName }}.</p>
+        <p class="disclaimer">Réponses générées par IA, en mon nom, à partir de mon parcours réel.</p>
       </section>
     }
 
@@ -80,15 +80,15 @@ export class ChatWidget {
   private readonly field = viewChild<ElementRef<HTMLInputElement>>('field');
 
   protected readonly welcome =
-    `Bonjour 👋 Je suis l'assistant IA de ${PROFILE.firstName}. Posez-moi vos questions sur son parcours, ` +
-    'ses expériences, ses compétences (full-stack, DevSecOps, IA, agile…) ou ses projets.';
+    `Bonjour 👋 Moi c'est ${PROFILE.firstName}. Merci de passer sur mon portfolio ! ` +
+    "Posez-moi vos questions sur mon parcours, mes expériences ou ce que je sais faire : je vous réponds avec plaisir.";
 
   protected readonly suggestions = [
-    'Quel est ton parcours ?',
-    'Quelles sont tes compétences DevSecOps ?',
-    "Comment intègres-tu l'IA dans tes projets ?",
-    'Quelles architectures maîtrises-tu ?',
-    'Pourquoi devrais-je te recruter ?',
+    'Pouvez-vous vous présenter ?',
+    'Quelle expérience avez-vous en Java / Angular ?',
+    "Comment intégrez-vous l'IA dans vos projets ?",
+    'Quel type d’alternance recherchez-vous ?',
+    'Pourquoi devrais-je vous recruter ?',
   ];
 
   constructor() {

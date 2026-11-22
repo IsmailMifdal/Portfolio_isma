@@ -23,6 +23,12 @@ import { SectionHeader } from '../shared/section-header';
             @if (p.links.schoolEmail) {
               <a class="btn" [href]="'mailto:' + p.links.schoolEmail">🎓 {{ p.links.schoolEmail }}</a>
             }
+            @if (p.links.phone) {
+              <a class="btn" [href]="'tel:' + p.links.phone.replaceAll(' ', '')">📞 {{ p.links.phone }}</a>
+            }
+            @if (p.links.cv) {
+              <a class="btn" [href]="p.links.cv" download>📄 Télécharger mon CV</a>
+            }
             @if (p.links.linkedin) {
               <a class="btn" [href]="p.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
             }
