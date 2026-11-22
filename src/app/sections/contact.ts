@@ -20,6 +20,9 @@ import { SectionHeader } from '../shared/section-header';
             @if (p.links.email) {
               <a class="btn btn-primary" [href]="'mailto:' + p.links.email">✉️ {{ p.links.email }}</a>
             }
+            @if (p.links.schoolEmail) {
+              <a class="btn" [href]="'mailto:' + p.links.schoolEmail">🎓 {{ p.links.schoolEmail }}</a>
+            }
             @if (p.links.linkedin) {
               <a class="btn" [href]="p.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
             }

@@ -15,9 +15,13 @@ import { SectionHeader } from '../shared/section-header';
             @for (paragraph of p.about; track $index) {
               <p [class.todo]="isTodo(paragraph)">{{ paragraph }}</p>
             }
+            <p class="where">📍 {{ p.location }} · {{ p.availability }}</p>
             <div class="langs">
               @for (l of p.languages; track l.name) {
                 <span class="chip">🌍 {{ l.name }} · <span [class.todo]="isTodo(l.level)">{{ l.level }}</span></span>
+              }
+              @for (i of p.interests; track i) {
+                <span class="chip">{{ i.startsWith('Boxe') ? '🥊' : '⚽' }} {{ i }}</span>
               }
             </div>
           </div>
@@ -43,6 +47,10 @@ import { SectionHeader } from '../shared/section-header';
     .text p {
       font-size: 18px;
       margin: 0 0 18px;
+    }
+    .where {
+      font-size: 15px !important;
+      color: var(--muted);
     }
     .langs {
       display: flex;

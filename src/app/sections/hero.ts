@@ -268,9 +268,7 @@ import { PROFILE } from '../data/profile';
 export class Hero implements OnInit, OnDestroy {
   readonly askAssistant = output<void>();
   protected readonly p = PROFILE;
-  protected readonly availability = PROFILE.availability.includes('À compléter')
-    ? 'Disponible pour de nouvelles opportunités'
-    : PROFILE.availability;
+  protected readonly availability = PROFILE.badge;
   protected readonly typed = signal('');
   protected readonly photoFailed = signal(false);
   private timer?: ReturnType<typeof setTimeout>;

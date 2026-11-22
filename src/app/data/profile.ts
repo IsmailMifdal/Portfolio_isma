@@ -52,11 +52,12 @@ export interface Profile {
   roles: string[]; // défilent dans l'en-tête
   location: string;
   availability: string;
+  badge: string; // pastille courte de l'en-tête
   photo: string; // chemin dans /public ; repli sur les initiales si absent
   pitch: string;
   about: string[];
   stats: { value: string; label: string }[];
-  links: { github: string; linkedin?: string; email?: string; cv?: string };
+  links: { github: string; linkedin?: string; email?: string; schoolEmail?: string; cv?: string };
   experiences: Experience[];
   education: Education[];
   skillGroups: SkillGroup[];
@@ -64,129 +65,183 @@ export interface Profile {
   webServices: { name: string; description: string }[];
   projects: Project[];
   languages: { name: string; level: string }[];
+  interests: string[];
 }
 
 export const PROFILE: Profile = {
   firstName: 'Ismail',
   lastName: 'Mifdal',
-  title: 'Développeur Full-Stack · DevSecOps · IA',
+  title: 'Développeur Full Stack · IA · DevSecOps',
   roles: [
-    'Développeur Full-Stack',
-    'Ingénieur DevSecOps',
-    'Intégrateur IA',
-    'Architecte logiciel en devenir',
+    'Développeur Full Stack',
+    'Java Spring Boot & Angular',
+    'Intégrateur IA (RAG, LLM)',
+    'DevSecOps & CI/CD',
   ],
-  location: 'France', // À compléter : ville
-  availability: 'À compléter : ex. « Ouvert à une alternance / un CDI à partir de … »',
+  location: 'Valbonne · Sophia Antipolis',
+  availability:
+    'Alternance 1 an (Master 2) · disponible immédiatement · rythme 2 semaines entreprise / 1 semaine école · permis B',
+  badge: 'Disponible immédiatement · Alternance Master 2',
   photo: 'profile.jpg',
   pitch:
-    'Je conçois des applications web et mobiles de bout en bout, sécurisées dès la conception, ' +
-    "et j'y intègre de l'IA utile : du modèle de vision entraîné sur le terrain au copilote RAG.",
+    "Ingénieur en informatique, je conçois des applications web et mobiles de bout en bout, du back-end Java " +
+    "ou Node à la mise en production, et j'y intègre de l'IA utile : RAG, LangChain, LLM auto-hébergés.",
   about: [
-    'À compléter : 2 à 3 phrases sur ton parcours, ce qui te motive et le type de poste que tu vises.',
-    "À compléter : ce qui te distingue (ex. livrer en production, sécurité de la chaîne CI/CD, IA appliquée).",
+    'Ingénieur en Informatique et Réseaux (MIAGE, EMSI Casablanca, 2024), je suis aujourd’hui en Mastère Expert en Développement Full Stack à Sophia Ynov Campus.',
+    'Plus d’un an d’expérience en production sur des plateformes métier (Java Spring Boot, Angular, micro-services), une expérience en agence web (PHP/Laravel, React, intégration URSSAF) et des projets personnels orientés IA (RAG, LangChain, LLM auto-hébergés).',
+    'Autonome et rigoureux, je suis à l’aise du back-end au front-end comme sur la mise en production, le suivi des correctifs et le travail en Agile/Scrum. Je recherche une alternance pour mon Master 2, disponible immédiatement.',
   ],
   stats: [
-    { value: 'À compléter', label: "années d'expérience" },
-    { value: 'À compléter', label: 'projets livrés' },
-    { value: 'À compléter', label: 'technologies maîtrisées' },
+    { value: '1 an+', label: "d'expérience en production" },
+    { value: '500+', label: 'adhérents sur une plateforme livrée' },
+    { value: '3', label: 'plateformes en production en agence' },
   ],
   links: {
     github: 'https://github.com/IsmailMifdal',
-    linkedin: '', // À compléter
-    email: '', // À compléter
-    cv: '', // ex. 'cv-ismail-mifdal.pdf' dans /public
+    linkedin: 'https://www.linkedin.com/in/ismail-mifdal',
+    email: 'ismailmifdal12@gmail.com',
+    schoolEmail: 'ismail.mifdal@ynov.com',
+    cv: '',
   },
 
   experiences: [
     {
-      role: 'À compléter : intitulé du poste',
-      company: 'À compléter : entreprise',
-      location: 'À compléter',
-      period: 'À compléter',
-      type: 'Alternance',
-      summary: 'À compléter : mission en une phrase.',
+      role: 'Développeur Full Stack',
+      company: 'Codi-One (agence web)',
+      location: 'Orléans, France',
+      period: '07/2026 – 08/2026',
+      type: 'Stage',
+      summary: 'Développement et maintenance de trois plateformes en production pour une agence web.',
       highlights: [
-        'À compléter : réalisation chiffrée (ex. « temps de déploiement divisé par 3 »).',
-        'À compléter : responsabilité ou résultat marquant.',
+        'Intervention sur trois plateformes en production : Promenons-nous, Stage Connect et 123LINK.',
+        'Stage Connect : développement du dashboard et du coffre-fort DPAE (génération et transmission automatiques des DPAE, intégration URSSAF).',
+        'Traitement des demandes d’évolution et des correctifs remontés par e-mail, en lien direct avec la direction.',
       ],
-      stack: [],
+      stack: ['PHP', 'Laravel', 'MySQL', 'React', 'TypeScript', 'REST API', 'URSSAF (DPAE)', 'Git/GitHub'],
+    },
+    {
+      role: 'Développeur Full Stack',
+      company: 'FRMVB (fédération sportive)',
+      location: 'Rabat, Maroc',
+      period: '01/2025 – 08/2025',
+      type: 'CDD',
+      summary: 'Évolution, optimisation et mise en production de la plateforme de gestion de la fédération.',
+      highlights: [
+        'Mise en production de la plateforme, avec une amélioration de l’efficacité de 30 % ; suivi du déploiement en continu.',
+        'Optimisation du code et des micro-services pour améliorer les performances et la scalabilité.',
+        'Ajout de nouvelles fonctionnalités en concertation avec l’équipe métier de la fédération.',
+        'Tests de régression et correction des anomalies avant et après mise en production.',
+      ],
+      stack: ['Java', 'Spring Boot', 'Angular', 'TypeScript', 'REST API', 'Spring Security', 'Hibernate (JPA)', 'MySQL', 'Docker', 'Micro-services'],
+    },
+    {
+      role: 'Développeur Concepteur Full Stack',
+      company: 'FRMVB (fédération sportive)',
+      location: 'Rabat, Maroc',
+      period: '03/2024 – 09/2024',
+      type: 'Stage',
+      summary: 'Stage de fin d’études : conception et développement de la plateforme de gestion de la fédération.',
+      highlights: [
+        'Conception et développement d’une plateforme de gestion utilisée par plus de 500 adhérents.',
+        'Modélisation d’une base de données optimisée réduisant le temps de recherche de 40 %.',
+        'Déploiement et tests permettant de réduire les erreurs de gestion de 25 %.',
+        'Pilotage Agile/Scrum, diagrammes UML et gestion des exigences.',
+      ],
+      stack: ['Java', 'Spring Boot', 'Angular', 'TypeScript', 'HTML5/CSS3', 'REST API', 'Spring Security', 'Hibernate (JPA)', 'MySQL', 'Micro-services'],
     },
   ],
 
   education: [
     {
-      degree: 'À compléter : diplôme (ex. Mastère Expert en développement logiciel)',
-      school: 'À compléter : école',
-      location: 'À compléter',
-      period: 'À compléter',
-      details: ['À compléter : spécialité, projets ou mentions.'],
+      degree: 'Mastère Expert en Développement Full Stack (Master 2 en alternance)',
+      school: 'Sophia Ynov Campus',
+      location: 'Valbonne, France',
+      period: '2025 – 2027',
+    },
+    {
+      degree: 'Diplôme d’Ingénieur – Informatique & Réseaux (MIAGE)',
+      school: 'École Marocaine des Sciences de l’Ingénieur (EMSI)',
+      location: 'Casablanca, Maroc',
+      period: '2019 – 2024',
+    },
+    {
+      degree: 'Baccalauréat Sciences Physiques-Chimie',
+      school: 'Lycée Azhar',
+      location: 'Casablanca, Maroc',
+      period: '2018',
     },
   ],
 
-  // Compétences relevées dans tes dépôts GitHub : ajuste, retire ou complète librement.
   skillGroups: [
     {
-      id: 'dev',
-      title: 'Programmation',
-      icon: '💻',
-      description: 'Langages et frameworks pour le web, le mobile et le back-end.',
-      items: ['TypeScript', 'JavaScript', 'Java', 'Python', 'Dart', 'Go', 'SQL', 'Angular', 'React', 'Next.js', 'Flutter', 'React Native', 'NestJS', 'Spring Boot', 'Flask'],
+      id: 'backend',
+      title: 'Back-end',
+      icon: '⚙️',
+      description: 'API robustes et sécurisées, du monolithe aux micro-services.',
+      items: ['Java', 'Spring Boot', 'Spring Security', 'Hibernate (JPA)', 'Spring Cloud Gateway', 'Eureka', 'PHP', 'Laravel', 'Node.js', 'NestJS', 'C#', 'ASP.NET', 'Python', 'Django', 'FastAPI', 'REST API'],
     },
     {
-      id: 'devsecops',
-      title: 'DevSecOps & CI/CD',
-      icon: '🛡️',
-      description: "Automatiser, sécuriser et livrer : de l'image durcie à la supply chain signée.",
-      items: ['Docker', 'Docker Compose', 'GitHub Actions', 'GHCR', 'Images multi-architectures', 'Signature d’images', 'SonarCloud', 'Durcissement (hardening)', 'Nginx / Caddy', 'Vercel', 'Railway'],
+      id: 'frontend',
+      title: 'Front-end & mobile',
+      icon: '🎨',
+      description: 'Interfaces web et mobiles réactives.',
+      items: ['Angular', 'TypeScript', 'React', 'Next.js', 'Flutter', 'Dart', 'HTML5', 'CSS3 / SCSS', 'JavaScript'],
     },
     {
       id: 'ia',
       title: 'IA : intégration & entraînement',
       icon: '🤖',
-      description: 'Intégrer des LLM dans des produits et entraîner des modèles sur des données réelles.',
-      items: ['OpenAI API', 'RAG', 'pgvector / embeddings', 'Prompt engineering', 'Vision par ordinateur', 'RF-DETR', 'YOLO', 'ByteTrack', 'Étiquetage & fine-tuning'],
+      description: 'Intégrer des LLM dans des produits et exploiter des modèles sur des données réelles.',
+      items: ['OpenAI API', 'Claude API', 'LangChain', 'RAG', 'Embeddings', 'ChromaDB', 'sentence-transformers', 'Ollama (Mistral 7B)', 'Hugging Face', 'Prompt engineering', 'Pandas / NumPy', 'Vision par ordinateur (RF-DETR, YOLO)'],
+    },
+    {
+      id: 'devsecops',
+      title: 'DevSecOps & CI/CD',
+      icon: '🛡️',
+      description: "Automatiser, sécuriser et livrer : de l'image Docker durcie au pipeline CI/CD.",
+      items: ['Docker', 'Docker Compose', 'GitHub Actions', 'CI/CD', 'GHCR', 'Durcissement d’images', 'Signature d’images', 'SonarCloud', 'Vercel', 'Railway', 'Git / GitHub'],
     },
     {
       id: 'agile',
       title: 'Gestion de projet & Agile',
       icon: '🧭',
-      description: 'Cadrer, prioriser et livrer par itérations courtes.',
-      items: ['Scrum', 'Kanban', 'Sprints & roadmap', 'User stories', 'Revues de code (PR)', 'Jira / Linear', 'Documentation technique'],
+      description: 'Cadrer, prioriser et livrer par itérations, en lien avec le métier.',
+      items: ['Agile / Scrum', 'UML', 'Gestion des exigences', 'Revues de code (PR)', 'Tests de régression', 'Postman', 'Suivi des correctifs'],
     },
     {
       id: 'data',
-      title: 'Données & infrastructure',
+      title: 'Bases de données',
       icon: '🗄️',
-      description: 'Bases de données, messagerie et temps réel.',
-      items: ['PostgreSQL', 'PostGIS', 'TimescaleDB', 'Redis', 'Supabase', 'Prisma', 'JPA / Hibernate', 'Flyway', 'MQTT', 'WebSocket'],
+      description: 'Modélisation, performance et données géographiques.',
+      items: ['MySQL', 'PostgreSQL', 'PostGIS', 'Redis', 'ChromaDB', 'Prisma', 'Hibernate (JPA)'],
     },
   ],
 
   architectures: [
-    { name: 'Microservices & API Gateway', description: 'Services découpés par domaine derrière une passerelle, une base par service.' },
-    { name: 'Architecture hexagonale / en couches', description: 'Domaine métier isolé des frameworks, testable et remplaçable.' },
-    { name: 'Edge + Cloud (IoT)', description: "Traitement vidéo en local, seuls des événements partent vers le cloud via MQTT." },
-    { name: 'Event-driven & temps réel', description: 'Événements, WebSocket/STOMP et tâches planifiées.' },
+    { name: 'Micro-services & API Gateway', description: 'Services découpés par domaine, Spring Cloud Gateway et découverte de services avec Eureka.' },
+    { name: 'Architecture RAG', description: 'Base vectorielle (ChromaDB + embeddings multilingues), orchestration LangChain et LLM auto-hébergé.' },
+    { name: 'Architecture en couches (MVC)', description: 'Contrôleurs, services et accès aux données séparés (Spring Boot, Laravel, NestJS).' },
+    { name: 'Temps réel & événements', description: 'WebSocket, notifications push et tâches planifiées.' },
     { name: 'Monorepo full-stack', description: 'API, back-office et application mobile dans un même dépôt avec une CI commune.' },
   ],
 
   webServices: [
-    { name: 'REST', description: 'API versionnées, validation des entrées, OpenAPI / Swagger.' },
-    { name: 'Authentification', description: 'JWT + refresh rotatif, OAuth (Google / Apple), RBAC.' },
-    { name: 'Temps réel', description: 'WebSocket, Socket.IO, STOMP, MQTT.' },
-    { name: 'Paiement & webhooks', description: 'Passerelle de paiement, webhooks idempotents.' },
-    { name: 'API d’IA', description: 'OpenAI, embeddings, RAG avec citations.' },
+    { name: 'REST', description: 'API REST documentées et testées (Postman, OpenAPI).' },
+    { name: 'Sécurité', description: 'Spring Security, JWT, gestion des rôles.' },
+    { name: 'Intégrations tierces', description: 'URSSAF (DPAE), paiement en ligne (CMI), webhooks.' },
+    { name: 'Temps réel', description: 'WebSocket et notifications push.' },
+    { name: 'API d’IA', description: 'OpenAI, Claude, LangChain, RAG avec embeddings.' },
   ],
 
-  // Projets : laissé vide volontairement, à remplir avec les dépôts que tu choisis.
+  // Projets : à remplir avec les dépôts choisis.
   projects: [],
 
   languages: [
-    { name: 'Français', level: 'À compléter' },
-    { name: 'Anglais', level: 'À compléter' },
-    { name: 'Arabe', level: 'À compléter' },
+    { name: 'Français', level: 'Courant (C1)' },
+    { name: 'Anglais', level: 'Avancé (B2)' },
+    { name: 'Arabe', level: 'Langue maternelle' },
   ],
+  interests: ['Boxe anglaise (rigueur & discipline)', 'Football (esprit d’équipe)'],
 };
 
 /** Texte brut du profil, utilisé comme base de connaissances par le chatbot. */
@@ -196,7 +251,7 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     `# ${p.firstName} ${p.lastName} — ${p.title}`,
     `Localisation : ${todo(p.location)} | Disponibilité : ${todo(p.availability)}`,
     `Présentation : ${p.pitch} ${p.about.map(todo).join(' ')}`,
-    `Liens : GitHub ${p.links.github}${p.links.linkedin ? ` | LinkedIn ${p.links.linkedin}` : ''}${p.links.email ? ` | Email ${p.links.email}` : ''}`,
+    `Liens : GitHub ${p.links.github}${p.links.linkedin ? ` | LinkedIn ${p.links.linkedin}` : ''}${p.links.email ? ` | Email ${p.links.email}` : ''}${p.links.schoolEmail ? ` | Email école ${p.links.schoolEmail}` : ''}`,
     '',
     '## Expériences professionnelles',
     ...p.experiences.map(
@@ -228,6 +283,8 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     '',
     '## Langues',
     ...p.languages.map((l) => `- ${l.name} : ${todo(l.level)}`),
+    '',
+    `## Centres d'intérêt : ${p.interests.join(', ')}`,
   ];
   return lines.join('\n');
 }
