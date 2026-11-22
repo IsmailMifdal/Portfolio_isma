@@ -64,6 +64,8 @@ export interface Profile {
   architectures: { name: string; description: string }[];
   webServices: { name: string; description: string }[];
   projects: Project[];
+  /** Projets connus du chatbot mais pas (encore) affichés dans la section Projets. */
+  assistantOnlyProjects: Project[];
   languages: { name: string; level: string }[];
   interests: string[];
 }
@@ -237,6 +239,28 @@ export const PROFILE: Profile = {
   // Projets : à remplir avec les dépôts choisis.
   projects: [],
 
+  // Projets du CV : le chatbot peut en parler même s'ils ne sont pas encore affichés.
+  assistantOnlyProjects: [
+    {
+      name: 'PADEL',
+      tagline: 'Application mobile & back-end de matching entre joueurs de padel et de réservation de terrains (projet personnel, 2026)',
+      description:
+        'Clubs géolocalisés (PostGIS), créneaux en temps réel, paiement en ligne (CMI), matchs ouverts, chat WebSocket, notifications push. ' +
+        'Zéro double-réservation grâce à un verrou Redis et une contrainte PostgreSQL EXCLUDE (GiST). CI GitHub Actions.',
+      stack: ['NestJS', 'PostgreSQL', 'PostGIS', 'Prisma', 'Redis', 'Flutter', 'Next.js', 'Docker', 'GitHub Actions'],
+      repo: 'https://github.com/IsmailMifdal/padell',
+    },
+    {
+      name: 'IA-DAF',
+      tagline: 'Assistant IA multilingue (FR / EN / AR / ES) pour les démarches administratives en France (projet personnel, 2026)',
+      description:
+        'Guide les non-francophones : documents, étapes, délais et organisme compétent. Chatbot RAG : base vectorisée ' +
+        '(ChromaDB + embeddings multilingues), orchestration LangChain et LLM Mistral 7B auto-hébergé via Ollama, derrière une architecture micro-services.',
+      stack: ['Python', 'FastAPI', 'LangChain', 'ChromaDB', 'sentence-transformers', 'Ollama (Mistral 7B)', 'Spring Cloud Gateway', 'Eureka', 'Next.js', 'React', 'Docker Compose'],
+      repo: 'https://github.com/IsmailMifdal/IADAF-YDAYS',
+    },
+  ],
+
   languages: [
     { name: 'Français', level: 'Courant (C1)' },
     { name: 'Anglais', level: 'Avancé (B2)' },
@@ -274,8 +298,8 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     ...p.webServices.map((w) => `- ${w.name} : ${w.description}`),
     '',
     '## Projets',
-    ...(p.projects.length
-      ? p.projects.map(
+    ...([...p.projects, ...p.assistantOnlyProjects].length
+      ? [...p.projects, ...p.assistantOnlyProjects].map(
           (pr) =>
             `- ${pr.name} — ${pr.tagline}. ${pr.description} Stack : ${pr.stack.join(', ')}.` +
             `${pr.repo ? ` Code : ${pr.repo}.` : ''}${pr.demo ? ` Démo : ${pr.demo}.` : ''}`,
