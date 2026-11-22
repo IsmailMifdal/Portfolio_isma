@@ -13,7 +13,7 @@ import { SectionHeader } from '../shared/section-header';
           eyebrow="05 · Projets"
           title="Projets"
           highlight="réalisés"
-          subtitle="Une sélection de projets publiés sur GitHub, du produit complet au TP technique poussé."
+          subtitle="Une sélection de projets publiés sur GitHub, du produit complet au prototype, avec leur démo en ligne."
         />
 
         @if (p.projects.length) {
@@ -22,9 +22,21 @@ import { SectionHeader } from '../shared/section-header';
               <article class="card project" [class.featured]="pr.featured" appReveal>
                 @if (pr.image && !broken().has(pr.name)) {
                   <img [src]="pr.image" [alt]="'Aperçu de ' + pr.name" loading="lazy" (error)="markBroken(pr.name)" />
+                } @else {
+                  <div class="banner" [style.--hue]="hue($index)" aria-hidden="true">
+                    <span class="emoji">{{ pr.emoji ?? '🚀' }}</span>
+                    @if (pr.featured) {
+                      <span class="tag">⭐ Projet phare</span>
+                    }
+                  </div>
                 }
                 <div class="body">
-                  <h3>{{ pr.name }}</h3>
+                  <div class="title">
+                    <h3>{{ pr.name }}</h3>
+                    @if (pr.year) {
+                      <span class="year">{{ pr.year }}</span>
+                    }
+                  </div>
                   <p class="tagline">{{ pr.tagline }}</p>
                   <p>{{ pr.description }}</p>
                   @if (pr.highlights?.length) {
@@ -70,7 +82,7 @@ import { SectionHeader } from '../shared/section-header';
   styles: `
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 22px;
     }
     .project {
@@ -83,7 +95,57 @@ import { SectionHeader } from '../shared/section-header';
       transform: translateY(-4px);
     }
     .featured {
-      grid-column: span 2;
+      grid-column: 1 / -1;
+      flex-direction: row;
+    }
+    .featured .banner {
+      flex: 0 0 38%;
+      height: auto;
+      min-height: 260px;
+      border-bottom: 0;
+      border-right: 1px solid var(--border);
+    }
+    .banner {
+      position: relative;
+      height: 140px;
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 20% 20%, hsl(var(--hue) 90% 65% / 0.55), transparent 55%),
+        radial-gradient(circle at 85% 80%, hsl(calc(var(--hue) + 60) 90% 60% / 0.45), transparent 55%),
+        var(--bg-soft);
+    }
+    .emoji {
+      font-size: 56px;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+      transition: transform 0.3s ease;
+    }
+    .project:hover .emoji {
+      transform: scale(1.12) rotate(-4deg);
+    }
+    .tag {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
+    }
+    .title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .year {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
     }
     img {
       width: 100%;
@@ -153,7 +215,12 @@ import { SectionHeader } from '../shared/section-header';
     }
     @media (max-width: 760px) {
       .featured {
-        grid-column: auto;
+        flex-direction: column;
+      }
+      .featured .banner {
+        min-height: 160px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
       }
       .empty {
         flex-direction: column;
@@ -164,6 +231,11 @@ import { SectionHeader } from '../shared/section-header';
 export class Projects {
   protected readonly p = PROFILE;
   protected readonly broken = signal(new Set<string>());
+  /** Teinte de bannière différente pour chaque projet. */
+  protected hue(index: number): number {
+    return [258, 190, 330, 40, 150][index % 5];
+  }
+
   protected markBroken(name: string): void {
     this.broken.update((s) => new Set(s).add(name));
   }

@@ -42,6 +42,8 @@ export interface Project {
   repo?: string; // URL GitHub
   demo?: string; // URL de démo en ligne
   image?: string; // chemin dans /public, ex. 'projects/padel.png'
+  emoji?: string; // icône de la bannière quand il n'y a pas d'image
+  year?: string;
   featured?: boolean;
 }
 
@@ -236,20 +238,77 @@ export const PROFILE: Profile = {
     { name: 'API d’IA', description: 'OpenAI, Claude, LangChain, RAG avec embeddings.' },
   ],
 
-  // Projets : à remplir avec les dépôts choisis.
-  projects: [],
-
-  // Projets du CV : le chatbot peut en parler même s'ils ne sont pas encore affichés.
-  assistantOnlyProjects: [
+  projects: [
     {
       name: 'PADEL',
-      tagline: 'Application mobile & back-end de matching entre joueurs de padel et de réservation de terrains (projet personnel, 2026)',
+      emoji: '🎾',
+      year: '2026',
+      featured: true,
+      tagline: 'Application mobile de matching entre joueurs et de réservation de terrains',
       description:
-        'Clubs géolocalisés (PostGIS), créneaux en temps réel, paiement en ligne (CMI), matchs ouverts, chat WebSocket, notifications push. ' +
-        'Zéro double-réservation grâce à un verrou Redis et une contrainte PostgreSQL EXCLUDE (GiST). CI GitHub Actions.',
+        'Une plateforme complète pour le padel au Maroc : trouver des clubs autour de soi, réserver un créneau en temps réel, ' +
+        'payer en ligne et rejoindre des matchs ouverts adaptés à son niveau. Appli joueur, espace club et back-office admin.',
+      highlights: [
+        'Zéro double-réservation : verrou Redis + contrainte PostgreSQL EXCLUDE (GiST).',
+        'Clubs géolocalisés (PostGIS), paiement CMI, chat WebSocket, notifications push.',
+        'Mode démo pour visiteurs : compte invité prérempli en un clic, données rafraîchies chaque nuit.',
+        'CI GitHub Actions (API, back-office, appli), déploiement Railway + Vercel.',
+      ],
       stack: ['NestJS', 'PostgreSQL', 'PostGIS', 'Prisma', 'Redis', 'Flutter', 'Next.js', 'Docker', 'GitHub Actions'],
       repo: 'https://github.com/IsmailMifdal/padell',
+      demo: 'https://padel-app-olive.vercel.app',
     },
+    {
+      name: 'RestoVision',
+      emoji: '📹',
+      year: '2026',
+      tagline: 'IA de vision branchée sur les caméras d’un restaurant',
+      description:
+        'Suit en direct l’état des tables et la file d’attente, et prévient l’équipe quand des clients attendent trop. ' +
+        'La vidéo est analysée sur place (edge) : seuls des événements partent vers le cloud.',
+      highlights: [
+        'Détection et suivi : RF-DETR + ByteTrack, modèle entraîné sur les images du pilote.',
+        'Edge Python → MQTT → Spring Boot (TimescaleDB) → WebSocket → écran de salle Angular.',
+        'Démo en ligne avec simulateur : demo@restovision.local / demo1234.',
+      ],
+      stack: ['Python', 'RF-DETR', 'ByteTrack', 'MQTT', 'Spring Boot', 'TimescaleDB', 'Flyway', 'Angular', 'Docker'],
+      repo: 'https://github.com/IsmailMifdal/resto-vision',
+      demo: 'https://resto-vision.vercel.app',
+    },
+    {
+      name: 'SkillCheck AI',
+      emoji: '🎯',
+      tagline: 'Copilote d’apprentissage : « teste-toi avant d’apprendre »',
+      description:
+        'On importe un cours (PDF ou texte), l’IA fait passer un diagnostic adaptatif, puis n’enseigne que les lacunes, ' +
+        'avec des explications ancrées sur le document, avant un re-test qui chiffre la progression.',
+      highlights: [
+        'Détection des faux acquis en croisant confiance × justesse des réponses.',
+        'RAG avec citations du document (Supabase pgvector + embeddings OpenAI).',
+      ],
+      stack: ['Next.js', 'TypeScript', 'Supabase', 'pgvector', 'OpenAI', 'RAG'],
+      repo: 'https://github.com/IsmailMifdal/skillcheck-ai',
+      demo: 'https://skillcheck-ai-psi.vercel.app',
+    },
+    {
+      name: 'L’Odyssée',
+      emoji: '🧭',
+      tagline: 'Prototype d’app mobile d’exploration urbaine gamifiée',
+      description:
+        'On prépare sa liste de lieux à découvrir, on tamponne son carnet sur place, on débloque des pages secrètes ' +
+        'et on transforme son carnet en souvenir imprimé. Parcours complet de l’onboarding au pack premium.',
+      highlights: [
+        'Une quinzaine d’écrans : carte, check-in, pépites cachées, classement, fil d’équipe, notifications.',
+        'Transitions animées (Framer Motion) et design « carnet de voyage ».',
+      ],
+      stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'shadcn/ui', 'Framer Motion'],
+      repo: 'https://github.com/IsmailMifdal/lodyssee',
+      demo: 'https://lodyssee.vercel.app',
+    },
+  ],
+
+  // Projets du CV non affichés : le chatbot peut quand même en parler.
+  assistantOnlyProjects: [
     {
       name: 'IA-DAF',
       tagline: 'Assistant IA multilingue (FR / EN / AR / ES) pour les démarches administratives en France (projet personnel, 2026)',
@@ -260,7 +319,6 @@ export const PROFILE: Profile = {
       repo: 'https://github.com/IsmailMifdal/IADAF-YDAYS',
     },
   ],
-
   languages: [
     { name: 'Français', level: 'Courant (C1)' },
     { name: 'Anglais', level: 'Avancé (B2)' },
