@@ -359,7 +359,8 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     ...([...p.projects, ...p.assistantOnlyProjects].length
       ? [...p.projects, ...p.assistantOnlyProjects].map(
           (pr) =>
-            `- ${pr.name} — ${pr.tagline}. ${pr.description} Stack : ${pr.stack.join(', ')}.` +
+            `- ${pr.name}${pr.featured ? ' (MON PROJET PHARE, le plus abouti)' : ''}${pr.year ? ` (${pr.year})` : ''} — ${pr.tagline}. ${pr.description}` +
+            `${pr.highlights?.length ? ` Points clés : ${pr.highlights.join(' ; ')}` : ''} Stack : ${pr.stack.join(', ')}.` +
             `${pr.repo ? ` Code : ${pr.repo}.` : ''}${pr.demo ? ` Démo : ${pr.demo}.` : ''}`,
         )
       : ['(liste des projets pas encore renseignée)']),
