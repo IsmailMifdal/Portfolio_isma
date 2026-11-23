@@ -37,7 +37,18 @@ import { PROFILE } from '../data/profile';
         <div class="portrait">
           <div class="ring">
             @if (!photoFailed()) {
-              <img [src]="p.photo" [alt]="'Photo de ' + p.firstName + ' ' + p.lastName" (error)="photoFailed.set(true)" />
+              <picture>
+                <source type="image/webp" srcset="profile-360.webp 360w, profile-720.webp 720w" sizes="(max-width: 860px) 240px, 340px" />
+                <img
+                  [src]="p.photo"
+                  [alt]="'Photo de ' + p.firstName + ' ' + p.lastName"
+                  width="720"
+                  height="720"
+                  fetchpriority="high"
+                  decoding="async"
+                  (error)="photoFailed.set(true)"
+                />
+              </picture>
             } @else {
               <div class="initials" aria-hidden="true">{{ p.firstName[0] }}{{ p.lastName[0] }}</div>
             }
@@ -81,6 +92,9 @@ import { PROFILE } from '../data/profile';
       bottom: -160px;
       right: -120px;
       animation-delay: -7s;
+    }
+:host-context([data-theme='light']) .glow {
+      opacity: 0.22;
     }
     @keyframes float {
       50% {
@@ -170,6 +184,11 @@ import { PROFILE } from '../data/profile';
       padding: 5px;
       background: var(--gradient);
       box-shadow: 0 30px 80px -20px rgba(124, 92, 255, 0.55);
+    }
+    .ring picture {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
     .ring img,
     .initials {

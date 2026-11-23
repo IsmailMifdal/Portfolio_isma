@@ -61,7 +61,7 @@ import { ChatService } from './chat.service';
       </section>
     }
 
-    <button class="fab" type="button" (click)="toggle()" [attr.aria-expanded]="open()" aria-label="Ouvrir l'assistant IA">
+    <button class="fab" type="button" (click)="toggle()" [attr.aria-expanded]="open()" [attr.aria-label]="open() ? 'Fermer l’assistant' : 'Demandez-moi : ouvrir l’assistant IA'">
       @if (open()) {
         ✕
       } @else {

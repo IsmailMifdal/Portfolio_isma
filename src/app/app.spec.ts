@@ -1,9 +1,17 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { DeferBlockState, TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { ChatService } from './chat/chat.service';
 import { PROFILE, profileAsKnowledge } from './data/profile';
+
+/** Les sections sous la ligne de flottaison sont en @defer : on les affiche pour les tester. */
+async function renderAll() {
+  const fixture = TestBed.createComponent(App);
+  for (const block of await fixture.getDeferBlocks()) await block.render(DeferBlockState.Complete);
+  await fixture.whenStable();
+  return fixture;
+}
 
 describe('Portfolio', () => {
   beforeEach(async () => {
@@ -15,8 +23,7 @@ describe('Portfolio', () => {
   });
 
   it('affiche le nom et toutes les sections', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
+    const fixture = await renderAll();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('h1')?.textContent).toContain(PROFILE.lastName);
     for (const id of ['accueil', 'apropos', 'competences', 'experience', 'formation', 'projets', 'contact']) {
@@ -24,9 +31,8 @@ describe('Portfolio', () => {
     }
   });
 
-  it('montre un état vide propre tant qu’aucun projet n’est renseigné', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
+  it('affiche les projets (ou un état vide propre s’il n’y en a pas)', async () => {
+    const fixture = await renderAll();
     const text = (fixture.nativeElement as HTMLElement).querySelector('#projets')?.textContent ?? '';
     expect(text).toContain(PROFILE.projects.length ? PROFILE.projects[0].name : 'Projets en cours de sélection');
   });

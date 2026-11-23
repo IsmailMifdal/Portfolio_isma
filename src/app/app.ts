@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ChatWidget } from './chat/chat-widget';
 import { About } from './sections/about';
 import { Contact } from './sections/contact';
@@ -14,15 +14,29 @@ import { EducationSection, ExperienceSection } from './sections/timeline';
   template: `
     <app-navbar />
     <main>
-      <app-hero (askAssistant)="assistant.openPanel()" />
-      <app-about />
-      <app-skills />
-      <app-experience />
-      <app-education />
-      <app-projects />
-      <app-contact (askAssistant)="assistant.openPanel()" />
+      <app-hero (askAssistant)="assistant()?.openPanel()" />
+      <!-- Sous la ligne de flottaison : chargé juste après l'affichage initial (JS du démarrage allégé) -->
+      @defer (on idle; prefetch on idle) {
+        <app-about />
+        <app-skills />
+        <app-experience />
+        <app-education />
+        <app-projects />
+        <app-contact (askAssistant)="assistant()?.openPanel()" />
+      } @placeholder {
+        <div class="below-fold" aria-hidden="true"></div>
+      }
     </main>
-    <app-chat-widget #assistant />
+    @defer (on idle) {
+      <app-chat-widget #assistant />
+    }
+  `,
+  styles: `
+    .below-fold {
+      min-height: 100vh;
+    }
   `,
 })
-export class App {}
+export class App {
+  protected readonly assistant = viewChild<ChatWidget>('assistant');
+}

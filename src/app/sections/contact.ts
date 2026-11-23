@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { AfterViewInit, Component, output } from '@angular/core';
 import { PROFILE } from '../data/profile';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
@@ -72,8 +72,14 @@ import { SectionHeader } from '../shared/section-header';
     }
   `,
 })
-export class Contact {
+export class Contact implements AfterViewInit {
   readonly askAssistant = output<void>();
   protected readonly p = PROFILE;
   protected readonly year = new Date().getFullYear();
+
+  /** Les sections sont chargées en différé : un lien direct (#projets…) défile une fois qu'elles existent. */
+  ngAfterViewInit(): void {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+  }
 }
