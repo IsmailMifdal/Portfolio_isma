@@ -75,12 +75,14 @@ const SESSION_2 = [
 ];
 
 async function ask(q, lang, session) {
+  const t0 = Date.now();
   const res = await fetch(`${BASE}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ messages: [{ role: 'user', content: q }], lang, session }),
   });
-  return { status: res.status, body: await res.json().catch(() => ({})) };
+  const body = await res.json().catch(() => ({}));
+  return { status: res.status, body, ms: Date.now() - t0 };
 }
 
 function judge(c, reply) {
@@ -100,7 +102,7 @@ async function runSession(name, cases) {
   console.log(`\n── ${name} ──`);
   let session = null;
   for (const c of cases) {
-    const { status, body } = await ask(c.q, c.lang ?? 'fr', session);
+    const { status, body, ms } = await ask(c.q, c.lang ?? 'fr', session);
     if (status !== 200) {
       failed++;
       line(false, c.q, `HTTP ${status} ${JSON.stringify(body)}`);
@@ -110,7 +112,7 @@ async function runSession(name, cases) {
     const problems = judge(c, body.reply);
     if (problems.length) failed++;
     else passed++;
-    line(!problems.length, `${c.q}  [reste ${body.remaining}]`, problems.length ? `${problems.join(' · ')}\n     → ${body.reply}` : '');
+    line(!problems.length, `${c.q}  [reste ${body.remaining} · ${(ms / 1000).toFixed(1)} s]`, problems.length ? `${problems.join(' · ')}\n     → ${body.reply}` : '');
   }
   return session;
 }
