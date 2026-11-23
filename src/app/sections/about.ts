@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, inject } from '@angular/core';
+import { I18n } from '../i18n';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
 
@@ -9,7 +9,7 @@ import { SectionHeader } from '../shared/section-header';
   template: `
     <section id="apropos" class="section">
       <div class="container">
-        <app-section-header eyebrow="01 · À propos" title="Qui" highlight="suis-je ?" />
+        <app-section-header [eyebrow]="t.about.eyebrow" [title]="t.about.title" [highlight]="t.about.highlight" />
         <div class="grid">
           <div class="text" appReveal>
             @for (paragraph of p.about; track $index) {
@@ -21,7 +21,7 @@ import { SectionHeader } from '../shared/section-header';
                 <span class="chip">🌍 {{ l.name }} · <span [class.todo]="isTodo(l.level)">{{ l.level }}</span></span>
               }
               @for (i of p.interests; track i) {
-                <span class="chip">{{ i.startsWith('Boxe') ? '🥊' : '⚽' }} {{ i }}</span>
+                <span class="chip">{{ $index === 0 ? '🥊' : '⚽' }} {{ i }}</span>
               }
             </div>
           </div>
@@ -81,7 +81,13 @@ import { SectionHeader } from '../shared/section-header';
   `,
 })
 export class About {
-  protected readonly p = PROFILE;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected isTodo(s: string): boolean {
     return s.includes('À compléter');
   }

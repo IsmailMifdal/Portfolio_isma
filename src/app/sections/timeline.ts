@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, inject } from '@angular/core';
+import { I18n } from '../i18n';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
 
@@ -12,7 +12,7 @@ const isTodo = (s?: string) => !!s && s.includes('À compléter');
   template: `
     <section id="experience" class="section">
       <div class="container">
-        <app-section-header eyebrow="03 · Expériences" title="Parcours" highlight="professionnel" />
+        <app-section-header [eyebrow]="t.experience.eyebrow" [title]="t.experience.title" [highlight]="t.experience.highlight" />
         <ol class="timeline">
           @for (e of p.experiences; track $index) {
             <li appReveal>
@@ -55,7 +55,13 @@ const isTodo = (s?: string) => !!s && s.includes('À compléter');
   styleUrl: './timeline.scss',
 })
 export class ExperienceSection {
-  protected readonly p = PROFILE;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly todo = isTodo;
 }
 
@@ -66,7 +72,7 @@ export class ExperienceSection {
   template: `
     <section id="formation" class="section">
       <div class="container">
-        <app-section-header eyebrow="04 · Formation" title="Parcours" highlight="académique" />
+        <app-section-header [eyebrow]="t.education.eyebrow" [title]="t.education.title" [highlight]="t.education.highlight" />
         <ol class="timeline">
           @for (e of p.education; track $index) {
             <li appReveal>
@@ -98,6 +104,12 @@ export class ExperienceSection {
   styleUrl: './timeline.scss',
 })
 export class EducationSection {
-  protected readonly p = PROFILE;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly todo = isTodo;
 }

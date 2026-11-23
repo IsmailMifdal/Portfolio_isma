@@ -1,10 +1,10 @@
-import { Component, HostListener, signal } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, HostListener, inject, signal } from '@angular/core';
+import { I18n } from '../i18n';
 
 @Component({
   selector: 'app-navbar',
   template: `
-    <nav [class.scrolled]="scrolled()" aria-label="Navigation principale">
+    <nav [class.scrolled]="scrolled()" [attr.aria-label]="t.nav.mainNav">
       <div class="container bar">
         <a class="brand" href="#accueil" (click)="open.set(false)">
           <span class="logo">IM</span>
@@ -18,14 +18,19 @@ import { PROFILE } from '../data/profile';
           (click)="open.set(!open())"
         >
           <span></span><span></span><span></span>
-          <span class="sr">Menu</span>
+          <span class="sr">{{ t.nav.menu }}</span>
         </button>
         <ul id="menu" [class.open]="open()">
           @for (l of links; track l.href) {
-            <li><a [href]="l.href" (click)="open.set(false)">{{ l.label }}</a></li>
+            <li><a [href]="l.href" (click)="open.set(false)">{{ t.nav[l.key] }}</a></li>
           }
           <li>
-            <button class="theme" type="button" (click)="toggleTheme()" [attr.aria-label]="'Basculer le thème'">
+            <button class="lang" type="button" (click)="i18n.toggle()" [attr.aria-label]="t.nav.switchTo" [title]="t.nav.switchTo">
+              <span [class.on]="i18n.lang() === 'fr'">FR</span><span [class.on]="i18n.lang() === 'en'">EN</span>
+            </button>
+          </li>
+          <li>
+            <button class="theme" type="button" (click)="toggleTheme()" [attr.aria-label]="t.nav.theme">
               {{ theme() === 'light' ? '🌙' : '☀️' }}
             </button>
           </li>
@@ -91,6 +96,25 @@ import { PROFILE } from '../data/profile';
       color: var(--text);
       background: var(--surface);
     }
+    .lang {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 10px;
+      cursor: pointer;
+      font: 600 12px var(--font);
+      color: var(--muted);
+    }
+    .lang span {
+      padding: 4px 7px;
+      border-radius: 7px;
+    }
+    .lang span.on {
+      background: var(--gradient);
+      color: #fff;
+    }
     .theme {
       border: 1px solid var(--border);
       background: var(--surface);
@@ -149,18 +173,24 @@ import { PROFILE } from '../data/profile';
   `,
 })
 export class Navbar {
-  protected readonly p = PROFILE;
+  protected readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly open = signal(false);
   protected readonly scrolled = signal(false);
   protected readonly theme = signal<'dark' | 'light'>(this.initialTheme());
   protected readonly links = [
-    { href: '#apropos', label: 'À propos' },
-    { href: '#competences', label: 'Compétences' },
-    { href: '#experience', label: 'Expériences' },
-    { href: '#formation', label: 'Formation' },
-    { href: '#projets', label: 'Projets' },
-    { href: '#contact', label: 'Contact' },
-  ];
+    { href: '#apropos', key: 'about' },
+    { href: '#competences', key: 'skills' },
+    { href: '#experience', key: 'experience' },
+    { href: '#formation', key: 'education' },
+    { href: '#projets', key: 'projects' },
+    { href: '#contact', key: 'contact' },
+  ] as const;
 
   constructor() {
     document.documentElement.dataset['theme'] = this.theme();

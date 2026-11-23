@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, output, signal } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, OnDestroy, OnInit, inject, output, signal } from '@angular/core';
+import { I18n } from '../i18n';
 
 @Component({
   selector: 'app-hero',
@@ -9,9 +9,9 @@ import { PROFILE } from '../data/profile';
       <div class="glow g2"></div>
       <div class="container grid">
         <div class="intro">
-          <span class="status"><span class="dot"></span>{{ availability }}</span>
+          <span class="status"><span class="dot"></span>{{ p.badge }}</span>
           <h1>
-            Bonjour, je suis<br />
+            {{ t.hero.hello }}<br />
             <span class="gradient-text">{{ p.firstName }} {{ p.lastName }}</span>
           </h1>
           <p class="role">
@@ -19,9 +19,9 @@ import { PROFILE } from '../data/profile';
           </p>
           <p class="pitch">{{ p.pitch }}</p>
           <div class="actions">
-            <a class="btn btn-primary" href="#projets">Voir mes projets</a>
+            <a class="btn btn-primary" href="#projets">{{ t.hero.seeProjects }}</a>
             <button class="btn" type="button" (click)="askAssistant.emit()">
-              ✨ Poser une question à mon assistant IA
+              {{ t.hero.ask }}
             </button>
           </div>
           <div class="socials">
@@ -30,7 +30,7 @@ import { PROFILE } from '../data/profile';
               <a [href]="p.links.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn ↗</a>
             }
             @if (p.links.cv) {
-              <a [href]="p.links.cv" download>Télécharger mon CV ↓</a>
+              <a [href]="p.links.cv" download>{{ t.hero.cv }}</a>
             }
           </div>
         </div>
@@ -41,7 +41,7 @@ import { PROFILE } from '../data/profile';
                 <source type="image/webp" srcset="profile-360.webp 360w, profile-720.webp 720w" sizes="(max-width: 860px) 240px, 340px" />
                 <img
                   [src]="p.photo"
-                  [alt]="'Photo de ' + p.firstName + ' ' + p.lastName"
+                  [alt]="t.hero.photoOf + ' ' + p.firstName + ' ' + p.lastName"
                   width="720"
                   height="720"
                   fetchpriority="high"
@@ -53,12 +53,12 @@ import { PROFILE } from '../data/profile';
               <div class="initials" aria-hidden="true">{{ p.firstName[0] }}{{ p.lastName[0] }}</div>
             }
           </div>
-          <div class="badge b1">🛡️ DevSecOps</div>
-          <div class="badge b2">🤖 IA appliquée</div>
-          <div class="badge b3">⚡ Full-Stack</div>
+          <div class="badge b1">{{ t.hero.badges[0] }}</div>
+          <div class="badge b2">{{ t.hero.badges[1] }}</div>
+          <div class="badge b3">{{ t.hero.badges[2] }}</div>
         </div>
       </div>
-      <a class="scroll" href="#apropos" aria-label="Descendre vers la suite">↓</a>
+      <a class="scroll" href="#apropos" [attr.aria-label]="t.hero.scrollDown">↓</a>
     </section>
   `,
   styles: `
@@ -286,8 +286,13 @@ import { PROFILE } from '../data/profile';
 })
 export class Hero implements OnInit, OnDestroy {
   readonly askAssistant = output<void>();
-  protected readonly p = PROFILE;
-  protected readonly availability = PROFILE.badge;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly typed = signal('');
   protected readonly photoFailed = signal(false);
   private timer?: ReturnType<typeof setTimeout>;

@@ -78,6 +78,11 @@ function rateLimited(ip: string): boolean {
   return entry.count > RATE_LIMIT;
 }
 
+const LANG_HINT = {
+  fr: '',
+  en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Traduis les intitulés de poste et de diplôme si utile.",
+} as const;
+
 function sanitize(body: unknown): Msg[] | null {
   const raw = (body as { messages?: unknown })?.messages;
   if (!Array.isArray(raw) || raw.length === 0) return null;
@@ -110,7 +115,10 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     res.status(429).json({ error: 'Trop de questions, réessayez dans quelques minutes.' });
     return;
   }
-  const messages = sanitize(typeof req.body === 'string' ? JSON.parse(req.body) : req.body);
+  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  const messages = sanitize(body);
+  // Langue affichée sur le site : sert de langue par défaut, le visiteur peut toujours en changer.
+  const lang = (body as { lang?: unknown })?.lang === 'en' ? 'en' : 'fr';
   if (!messages) {
     res.status(400).json({ error: 'Conversation invalide.' });
     return;
@@ -124,7 +132,7 @@ export default async function handler(req: Req, res: Res): Promise<void> {
         model: process.env['OPENAI_MODEL'] || 'gpt-4o-mini',
         temperature: 0.4,
         max_tokens: 450,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+        messages: [{ role: 'system', content: SYSTEM_PROMPT + LANG_HINT[lang] }, ...messages],
       }),
     });
     if (!upstream.ok) {

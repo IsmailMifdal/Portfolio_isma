@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, inject, signal } from '@angular/core';
+import { I18n } from '../i18n';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
 
@@ -10,10 +10,10 @@ import { SectionHeader } from '../shared/section-header';
     <section id="projets" class="section">
       <div class="container">
         <app-section-header
-          eyebrow="05 · Projets"
-          title="Projets"
-          highlight="réalisés"
-          subtitle="Une sélection de projets publiés sur GitHub, du produit complet au prototype, avec leur démo en ligne."
+          [eyebrow]="t.projects.eyebrow"
+          [title]="t.projects.title"
+          [highlight]="t.projects.highlight"
+          [subtitle]="t.projects.subtitle"
         />
 
         @if (p.projects.length) {
@@ -21,12 +21,12 @@ import { SectionHeader } from '../shared/section-header';
             @for (pr of p.projects; track pr.name) {
               <article class="card project" [class.featured]="pr.featured" appReveal>
                 @if (pr.image && !broken().has(pr.name)) {
-                  <img [src]="pr.image" [alt]="'Aperçu de ' + pr.name" loading="lazy" (error)="markBroken(pr.name)" />
+                  <img [src]="pr.image" [alt]="t.projects.previewOf + ' ' + pr.name" loading="lazy" (error)="markBroken(pr.name)" />
                 } @else {
                   <div class="banner" [style.--hue]="hue($index)" aria-hidden="true">
                     <span class="emoji">{{ pr.emoji ?? '🚀' }}</span>
                     @if (pr.featured) {
-                      <span class="tag">⭐ Projet phare</span>
+                      <span class="tag">{{ t.projects.featured }}</span>
                     }
                   </div>
                 }
@@ -53,10 +53,10 @@ import { SectionHeader } from '../shared/section-header';
                   </div>
                   <div class="links">
                     @if (pr.repo) {
-                      <a class="btn" [href]="pr.repo" target="_blank" rel="noopener">Code ↗</a>
+                      <a class="btn" [href]="pr.repo" target="_blank" rel="noopener">{{ t.projects.code }}</a>
                     }
                     @if (pr.demo) {
-                      <a class="btn btn-primary" [href]="pr.demo" target="_blank" rel="noopener">Démo en ligne ↗</a>
+                      <a class="btn btn-primary" [href]="pr.demo" target="_blank" rel="noopener">{{ t.projects.demo }}</a>
                     }
                   </div>
                 </div>
@@ -67,12 +67,11 @@ import { SectionHeader } from '../shared/section-header';
           <div class="card empty" appReveal>
             <span class="icon">🚧</span>
             <div>
-              <h3>Projets en cours de sélection</h3>
+              <h3>{{ t.projects.emptyTitle }}</h3>
               <p>
-                Cette section se remplit depuis <code>src/app/data/profile.ts</code> (tableau <code>projects</code>).
-                En attendant, tous mes dépôts sont sur GitHub.
+                {{ t.projects.emptyText }}
               </p>
-              <a class="btn btn-primary" [href]="p.links.github" target="_blank" rel="noopener">Voir mon GitHub ↗</a>
+              <a class="btn btn-primary" [href]="p.links.github" target="_blank" rel="noopener">{{ t.projects.seeGithub }}</a>
             </div>
           </div>
         }
@@ -243,7 +242,13 @@ import { SectionHeader } from '../shared/section-header';
   `,
 })
 export class Projects {
-  protected readonly p = PROFILE;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly broken = signal(new Set<string>());
   /** Teinte de bannière différente pour chaque projet. */
   protected hue(index: number): number {

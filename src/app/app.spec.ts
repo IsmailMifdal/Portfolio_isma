@@ -4,6 +4,8 @@ import { DeferBlockState, TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { ChatService } from './chat/chat.service';
 import { PROFILE, profileAsKnowledge } from './data/profile';
+import { PROFILE_EN } from './data/profile.en';
+import { I18n } from './i18n';
 
 /** Les sections sous la ligne de flottaison sont en @defer : on les affiche pour les tester. */
 async function renderAll() {
@@ -16,6 +18,7 @@ async function renderAll() {
 describe('Portfolio', () => {
   beforeEach(async () => {
     sessionStorage.clear();
+    localStorage.setItem('lang', 'fr');
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideHttpClient(), provideHttpClientTesting()],
@@ -57,6 +60,30 @@ describe('Portfolio', () => {
     http.expectOne('/api/chat').flush({ error: 'x' }, { status: 503, statusText: 'Unavailable' });
     await pending;
     expect(chat.error()).toContain('pas encore configuré');
+  });
+
+  it('bascule tout le site en anglais', async () => {
+    const fixture = await renderAll();
+    const el = fixture.nativeElement as HTMLElement;
+    TestBed.inject(I18n).set('en');
+    await fixture.whenStable();
+    expect(document.documentElement.lang).toBe('en');
+    expect(el.querySelector('#apropos')?.textContent).toContain('Who');
+    expect(el.querySelector('#experience')?.textContent).toContain(PROFILE_EN.experiences[0].role);
+    expect(el.querySelector('#contact')?.textContent).toContain('Download my CV');
+    expect(localStorage.getItem('lang')).toBe('en');
+  });
+
+  it('demande au chatbot de répondre dans la langue du site', async () => {
+    TestBed.inject(I18n).set('en');
+    const chat = TestBed.inject(ChatService);
+    const http = TestBed.inject(HttpTestingController);
+    const pending = chat.send('Hello');
+    const req = http.expectOne('/api/chat');
+    expect(req.request.body.lang).toBe('en');
+    req.flush({ error: 'x' }, { status: 503, statusText: 'Unavailable' });
+    await pending;
+    expect(chat.error()).toContain('isn’t set up yet');
   });
 });
 

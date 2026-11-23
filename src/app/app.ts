@@ -16,7 +16,7 @@ import { EducationSection, ExperienceSection } from './sections/timeline';
     <main>
       <app-hero (askAssistant)="assistant()?.openPanel()" />
       <!-- Sous la ligne de flottaison : chargé juste après l'affichage initial (JS du démarrage allégé) -->
-      @defer (on idle; prefetch on idle) {
+      @defer (on idle) {
         <app-about />
         <app-skills />
         <app-experience />

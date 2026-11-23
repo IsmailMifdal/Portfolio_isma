@@ -11,7 +11,7 @@ export interface Experience {
   company: string;
   location?: string;
   period: string; // ex. « Sept. 2024 – aujourd'hui »
-  type?: 'Alternance' | 'Stage' | 'CDI' | 'CDD' | 'Freelance' | 'Projet';
+  type?: string; // ex. « Stage », « CDD », « Internship »
   summary: string;
   highlights: string[];
   stack: string[];

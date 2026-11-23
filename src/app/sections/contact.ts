@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, output } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { AfterViewInit, Component, inject, output } from '@angular/core';
+import { I18n } from '../i18n';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
 
@@ -11,10 +11,10 @@ import { SectionHeader } from '../shared/section-header';
       <div class="container">
         <div class="card cta" appReveal>
           <app-section-header
-            eyebrow="06 · Contact"
-            title="Travaillons"
-            highlight="ensemble"
-            subtitle="Un poste, une alternance, un projet ? Écrivez-moi, ou interrogez d'abord mon assistant IA sur mon parcours."
+            [eyebrow]="t.contact.eyebrow"
+            [title]="t.contact.title"
+            [highlight]="t.contact.highlight"
+            [subtitle]="t.contact.subtitle"
           />
           <div class="actions">
             @if (p.links.email) {
@@ -27,20 +27,20 @@ import { SectionHeader } from '../shared/section-header';
               <a class="btn" [href]="'tel:' + p.links.phone.replaceAll(' ', '')">📞 {{ p.links.phone }}</a>
             }
             @if (p.links.cv) {
-              <a class="btn" [href]="p.links.cv" download>📄 Télécharger mon CV</a>
+              <a class="btn" [href]="p.links.cv" download>{{ t.contact.cv }}</a>
             }
             @if (p.links.linkedin) {
               <a class="btn" [href]="p.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
             }
             <a class="btn" [href]="p.links.github" target="_blank" rel="noopener">GitHub ↗</a>
-            <button class="btn" type="button" (click)="askAssistant.emit()">✨ Demander à mon assistant</button>
+            <button class="btn" type="button" (click)="askAssistant.emit()">{{ t.contact.ask }}</button>
           </div>
         </div>
       </div>
     </section>
     <footer class="container">
       <span>© {{ year }} {{ p.firstName }} {{ p.lastName }}</span>
-      <span>Construit avec Angular · Assistant propulsé par OpenAI</span>
+      <span>{{ t.contact.footer }}</span>
     </footer>
   `,
   styles: `
@@ -74,7 +74,13 @@ import { SectionHeader } from '../shared/section-header';
 })
 export class Contact implements AfterViewInit {
   readonly askAssistant = output<void>();
-  protected readonly p = PROFILE;
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
   protected readonly year = new Date().getFullYear();
 
   /** Les sections sont chargées en différé : un lien direct (#projets…) défile une fois qu'elles existent. */

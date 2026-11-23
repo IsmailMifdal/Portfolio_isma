@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { I18n } from '../i18n';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -14,6 +15,7 @@ const STORAGE_KEY = 'portfolio-chat';
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private readonly http = inject(HttpClient);
+  private readonly i18n = inject(I18n);
 
   readonly messages = signal<ChatMessage[]>(this.restore());
   readonly loading = signal(false);
@@ -28,7 +30,10 @@ export class ChatService {
     try {
       // La clé OpenAI reste sur le serveur : le navigateur ne parle qu'à /api/chat.
       const res = await firstValueFrom(
-        this.http.post<{ reply: string }>('/api/chat', { messages: this.messages().slice(-MAX_HISTORY) }),
+        this.http.post<{ reply: string }>('/api/chat', {
+          messages: this.messages().slice(-MAX_HISTORY),
+          lang: this.i18n.lang(),
+        }),
       );
       this.messages.update((m) => [...m, { role: 'assistant', content: res.reply }]);
     } catch (e) {
@@ -47,11 +52,12 @@ export class ChatService {
 
   private describe(e: unknown): string {
     if (e instanceof HttpErrorResponse) {
-      if (e.status === 429) return 'Beaucoup de questions en peu de temps : réessayez dans une minute.';
-      if (e.status === 503) return "L'assistant n'est pas encore configuré. Revenez bientôt !";
-      if (e.error?.error) return String(e.error.error);
+      const errors = this.i18n.t().chat.errors;
+      if (e.status === 429) return errors.rate;
+      if (e.status === 503) return errors.setup;
+      if (e.error?.error && this.i18n.lang() === 'fr') return String(e.error.error);
     }
-    return "L'assistant est momentanément indisponible. Réessayez plus tard.";
+    return this.i18n.t().chat.errors.generic;
   }
 
   private restore(): ChatMessage[] {

@@ -1,5 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
-import { PROFILE } from '../data/profile';
+import { Component, computed, inject, signal } from '@angular/core';
+import { I18n } from '../i18n';
 import { RevealDirective } from '../shared/reveal.directive';
 import { SectionHeader } from '../shared/section-header';
 
@@ -10,13 +10,13 @@ import { SectionHeader } from '../shared/section-header';
     <section id="competences" class="section">
       <div class="container">
         <app-section-header
-          eyebrow="02 · Compétences"
-          title="Ma boîte"
-          highlight="à outils"
-          subtitle="Programmation, DevSecOps, IA, gestion de projet agile, architectures logicielles et web services."
+          [eyebrow]="t.skills.eyebrow"
+          [title]="t.skills.title"
+          [highlight]="t.skills.highlight"
+          [subtitle]="t.skills.subtitle"
         />
 
-        <div class="tabs" role="tablist" aria-label="Catégories de compétences" appReveal>
+        <div class="tabs" role="tablist" [attr.aria-label]="t.skills.tabs" appReveal>
           @for (g of p.skillGroups; track g.id) {
             <button
               role="tab"
@@ -43,7 +43,7 @@ import { SectionHeader } from '../shared/section-header';
 
         <div class="split">
           <div appReveal>
-            <h3>🏗️ Architectures logicielles</h3>
+            <h3>{{ t.skills.architectures }}</h3>
             <ul class="list">
               @for (a of p.architectures; track a.name) {
                 <li class="card">
@@ -54,7 +54,7 @@ import { SectionHeader } from '../shared/section-header';
             </ul>
           </div>
           <div appReveal>
-            <h3>🔌 Web services</h3>
+            <h3>{{ t.skills.webServices }}</h3>
             <ul class="list">
               @for (w of p.webServices; track w.name) {
                 <li class="card">
@@ -139,7 +139,13 @@ import { SectionHeader } from '../shared/section-header';
   `,
 })
 export class Skills {
-  protected readonly p = PROFILE;
-  protected readonly active = signal(PROFILE.skillGroups[0]?.id ?? '');
+  private readonly i18n = inject(I18n);
+  protected get p() {
+    return this.i18n.profile();
+  }
+  protected get t() {
+    return this.i18n.t();
+  }
+  protected readonly active = signal(this.i18n.profile().skillGroups[0]?.id ?? '');
   protected readonly current = computed(() => this.p.skillGroups.find((g) => g.id === this.active()));
 }
