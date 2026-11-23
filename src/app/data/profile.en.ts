@@ -11,9 +11,9 @@ export const PROFILE_EN: Profile = {
   ...fr,
   title: 'Full Stack Developer · AI · DevSecOps',
   roles: ['Full Stack Developer', 'Java Spring Boot & Angular', 'AI integrator (RAG, LLM)', 'DevSecOps & CI/CD'],
-  location: 'Valbonne · Sophia Antipolis, France',
+  location: 'Open to opportunities anywhere in France',
   availability:
-    'One-year work-study (Master 2) · available immediately · 2 weeks at the company / 1 week at school · driving licence',
+    'One-year work-study (Master 2) · available immediately · 2 weeks at the company / 1 week at school · own car · driving licence',
   badge: 'Available now · Master 2 work-study',
   pitch:
     'Software engineer, I build web and mobile applications end to end, from Java or Node back-ends ' +

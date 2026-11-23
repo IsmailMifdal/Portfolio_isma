@@ -82,9 +82,9 @@ export const PROFILE: Profile = {
     'Intégrateur IA (RAG, LLM)',
     'DevSecOps & CI/CD',
   ],
-  location: 'Valbonne · Sophia Antipolis',
+  location: 'Ouvert à toute offre dans la France entière',
   availability:
-    'Alternance 1 an (Master 2) · disponible immédiatement · rythme 2 semaines entreprise / 1 semaine école · permis B',
+    'Alternance 1 an (Master 2) · disponible immédiatement · rythme 2 semaines entreprise / 1 semaine école · véhiculé · permis B',
   badge: 'Disponible immédiatement · Alternance Master 2',
   photo: 'profile.jpg',
   pitch:
@@ -160,7 +160,6 @@ export const PROFILE: Profile = {
     {
       degree: 'Mastère Expert en Développement Full Stack (Master 2 en alternance)',
       school: 'Sophia Ynov Campus',
-      location: 'Valbonne, France',
       period: '2025 – 2027',
     },
     {
@@ -332,7 +331,7 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
   const todo = (s: string) => (s.includes('À compléter') ? '(non renseigné)' : s);
   const lines: string[] = [
     `# ${p.firstName} ${p.lastName} — ${p.title}`,
-    `Localisation : ${todo(p.location)} | Disponibilité : ${todo(p.availability)}`,
+    `Mobilité géographique : ${todo(p.location)} | Disponibilité : ${todo(p.availability)}`,
     `Présentation : ${p.pitch} ${p.about.map(todo).join(' ')}`,
     `Liens : GitHub ${p.links.github}${p.links.linkedin ? ` | LinkedIn ${p.links.linkedin}` : ''}${p.links.email ? ` | Email ${p.links.email}` : ''}${p.links.schoolEmail ? ` | Email école ${p.links.schoolEmail}` : ''}${p.links.phone ? ` | Téléphone ${p.links.phone}` : ''}${p.links.cv ? ' | CV téléchargeable sur le site (bouton « Télécharger mon CV »)' : ''}`,
     '',
