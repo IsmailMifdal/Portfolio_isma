@@ -154,6 +154,38 @@ export const PROFILE: Profile = {
       ],
       stack: ['Java', 'Spring Boot', 'Angular', 'TypeScript', 'HTML5/CSS3', 'REST API', 'Spring Security', 'Hibernate (JPA)', 'MySQL', 'Micro-services'],
     },
+    {
+      role: 'Développeur Mobile React Native',
+      company: 'Marsa Maroc',
+      location: 'Casablanca, Maroc · hybride',
+      period: '09/2023 – 10/2023',
+      type: 'Stage',
+      summary:
+        'Application mobile multiplateforme (Android/iOS) de suivi du parc d’imprimantes : statut, disponibilité et maintenance.',
+      highlights: [
+        'Définition des spécifications fonctionnelles et techniques avec les équipes IT de Marsa Maroc.',
+        'Développement de l’application en React Native et intégration de l’API back-end (Node.js / Express).',
+        'Authentification et gestion des utilisateurs par rôles et permissions.',
+        'Tests, débogage et optimisation des performances et de l’expérience utilisateur.',
+      ],
+      stack: ['React Native', 'JavaScript', 'Node.js', 'Express', 'Firebase', 'MongoDB', 'GraphQL', 'Docker', 'Git'],
+    },
+    {
+      role: 'Développeur Java',
+      company: 'ONEE – Branche Électricité',
+      location: 'Casablanca, Maroc · hybride',
+      period: '08/2022 – 09/2022',
+      type: 'Stage',
+      summary:
+        'Plateforme collaborative de gestion des connaissances et de partage d’expertise pour les équipes de l’ONEE (Office national de l’électricité et de l’eau potable).',
+      highlights: [
+        'Analyse des besoins, rédaction du cahier des charges et modélisation UML de l’architecture.',
+        'Développement de l’application en Spring Boot / Thymeleaf, avec gestion des rôles et permissions (Spring Security).',
+        'Tests unitaires et d’intégration (JUnit), puis déploiement de l’application.',
+        'Travail en mode Agile (Scrum).',
+      ],
+      stack: ['Java', 'Spring Boot', 'Spring Security', 'Spring Data JPA', 'Thymeleaf', 'Maven', 'JUnit', 'Git'],
+    },
   ],
 
   education: [
@@ -189,7 +221,7 @@ export const PROFILE: Profile = {
       title: 'Front-end & mobile',
       icon: '🎨',
       description: 'Interfaces web et mobiles réactives.',
-      items: ['Angular', 'TypeScript', 'React', 'Next.js', 'Flutter', 'Dart', 'HTML5', 'CSS3 / SCSS', 'JavaScript'],
+      items: ['Angular', 'TypeScript', 'React', 'Next.js', 'React Native', 'Flutter', 'Dart', 'HTML5', 'CSS3 / SCSS', 'JavaScript'],
     },
     {
       id: 'ia',
@@ -217,7 +249,7 @@ export const PROFILE: Profile = {
       title: 'Bases de données',
       icon: '🗄️',
       description: 'Modélisation, performance et données géographiques.',
-      items: ['MySQL', 'PostgreSQL', 'PostGIS', 'Redis', 'ChromaDB', 'Prisma', 'Hibernate (JPA)'],
+      items: ['MySQL', 'PostgreSQL', 'PostGIS', 'MongoDB', 'Firebase', 'Redis', 'ChromaDB', 'Prisma', 'Hibernate (JPA)'],
     },
   ],
 

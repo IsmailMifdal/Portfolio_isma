@@ -72,6 +72,33 @@ export const PROFILE_EN: Profile = {
       ],
       stack: fr.experiences[2].stack.map((s) => (s === 'Micro-services' ? 'Microservices' : s)),
     },
+    {
+      ...fr.experiences[3],
+      role: 'React Native Mobile Developer',
+      location: 'Casablanca, Morocco · hybrid',
+      type: 'Internship',
+      summary: 'Cross-platform mobile app (Android/iOS) for tracking the printer fleet: status, availability and maintenance.',
+      highlights: [
+        'Defined functional and technical specifications with Marsa Maroc’s IT teams.',
+        'Built the app in React Native and integrated the back-end API (Node.js / Express).',
+        'Authentication and user management with roles and permissions.',
+        'Testing, debugging and optimisation of performance and user experience.',
+      ],
+    },
+    {
+      ...fr.experiences[4],
+      role: 'Java Developer',
+      company: 'ONEE – Electricity Branch',
+      location: 'Casablanca, Morocco · hybrid',
+      type: 'Internship',
+      summary: 'Collaborative knowledge-management and expertise-sharing platform for the teams of ONEE (Morocco’s National Office of Electricity and Drinking Water).',
+      highlights: [
+        'Requirements analysis, specification writing and UML modelling of the architecture.',
+        'Built the application with Spring Boot / Thymeleaf, with role and permission management (Spring Security).',
+        'Unit and integration testing (JUnit), then deployment of the application.',
+        'Agile (Scrum) teamwork.',
+      ],
+    },
   ],
 
   education: [
