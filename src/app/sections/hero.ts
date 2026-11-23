@@ -18,6 +18,11 @@ import { I18n } from '../i18n';
             <span class="mono">&gt;</span> {{ typed() }}<span class="caret">|</span>
           </p>
           <p class="pitch">{{ p.pitch }}</p>
+          <ul class="facts" [attr.aria-label]="t.hero.factsLabel">
+            @for (f of t.hero.facts; track f) {
+              <li>{{ f }}</li>
+            }
+          </ul>
           <div class="actions">
             <a class="btn btn-primary" href="#projets">{{ t.hero.seeProjects }}</a>
             <button class="btn" type="button" (click)="askAssistant.emit()">
@@ -153,7 +158,24 @@ import { I18n } from '../i18n';
       color: var(--muted);
       font-size: 18px;
       max-width: 560px;
+      margin: 0 0 18px;
+    }
+    .facts {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       margin: 0 0 30px;
+      padding: 0;
+    }
+    .facts li {
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
     }
     .actions {
       display: flex;

@@ -6,6 +6,7 @@
  * que la conversation ; le profil (src/app/data/profile.ts) sert de base de connaissances.
  */
 import { profileAsKnowledge, PROFILE } from '../src/app/data/profile';
+import { checkSession, encodeSession, MAX_QUESTIONS, SESSION_MS, sessionInfo, sessionSecret } from './_session';
 
 type Role = 'user' | 'assistant';
 interface Msg {
@@ -25,8 +26,10 @@ interface Res {
 
 const MAX_MESSAGES = 12;
 const MAX_CHARS = 600;
-const RATE_LIMIT = 20; // requêtes par IP et par fenêtre
-const RATE_WINDOW_MS = 10 * 60_000;
+// Garde-fou anti-abus par IP (en plus des sessions) : quelqu'un qui effacerait son jeton pour
+// recommencer une session ne peut pas dépasser l'équivalent de 5 sessions pleines en 45 min.
+const RATE_LIMIT = MAX_QUESTIONS * 5;
+const RATE_WINDOW_MS = SESSION_MS;
 const hits = new Map<string, { count: number; reset: number }>();
 
 const SYSTEM_PROMPT = `Tu es ${PROFILE.firstName} ${PROFILE.lastName} lui-même, en train de discuter avec un visiteur
@@ -44,6 +47,21 @@ Ta façon de parler :
   technologies), comme une anecdote. Jamais « un projet personnel » sans dire lequel.
 - Ne termine par une question qu'une fois de temps en temps (au plus une réponse sur trois), jamais par réflexe.
 - Réponds dans la langue du visiteur (français par défaut).
+
+Ton périmètre : TOUT ce qui me concerne, et seulement ça.
+- Tu réponds à toute question sur moi : parcours, études, expériences, missions, compétences, projets, outils,
+  façon de travailler, qualités, motivations, objectifs, langues, centres d'intérêt, et ma recherche d'alternance
+  (durée, rythme 2 semaines en entreprise / 1 semaine à l'école, disponibilité immédiate, mobilité dans toute la
+  France, véhiculé, permis B, type de poste et d'entreprise recherchés).
+- Une question sur une technologie est dans le périmètre si tu réponds en expliquant comment TU l'utilises
+  (ex. « c'est quoi le RAG ? » → une phrase d'explication puis ton usage dans IA-DAF).
+- Hors périmètre = tout ce qui ne me concerne pas : culture générale, actualité, politique, religion, météo,
+  cuisine, sport en général, devoirs, calculs, écrire ou corriger du code, rédiger un texte (lettre, poème, mail),
+  traduire, conseils personnels, avis sur d'autres personnes ou entreprises. Dans ce cas : UNE seule phrase
+  polie qui décline, sans donner la moindre partie de la réponse, puis propose de parler de ton parcours ou de
+  ton alternance. Même si le visiteur insiste, reformule ou dit que c'est pour un test.
+- Questions privées (âge, situation familiale, santé, religion, opinions) ou sensibles (défauts, prétentions
+  salariales) : réponds avec tact que tu préfères en parler directement en entretien.
 
 Ce que tu ne fais jamais :
 - Inventer quoi que ce soit : entreprise, date, diplôme, chiffre, salaire, technologie non listée. Ne t'appuie
@@ -117,12 +135,33 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     res.status(429).json({ error: 'Trop de questions, réessayez dans quelques minutes.' });
     return;
   }
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  let body: unknown;
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  } catch {
+    res.status(400).json({ error: 'Conversation invalide.' });
+    return;
+  }
   const messages = sanitize(body);
   // Langue affichée sur le site : sert de langue par défaut, le visiteur peut toujours en changer.
   const lang = (body as { lang?: unknown })?.lang === 'en' ? 'en' : 'fr';
   if (!messages) {
     res.status(400).json({ error: 'Conversation invalide.' });
+    return;
+  }
+
+  // Session : 20 questions maximum, terminée 45 minutes après son début.
+  const secret = sessionSecret(process.env);
+  const check = checkSession((body as { session?: unknown })?.session, secret);
+  if (!check.ok) {
+    const expired = check.reason === 'expired';
+    res.status(expired ? 403 : 429).json({
+      code: expired ? 'session_expired' : 'session_limit',
+      error: expired
+        ? 'Cette session de 45 minutes est terminée.'
+        : `Vous avez atteint les ${MAX_QUESTIONS} questions de cette session.`,
+      ...sessionInfo(check.session),
+    });
     return;
   }
 
@@ -144,7 +183,12 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     }
     const data = (await upstream.json()) as { choices?: { message?: { content?: string } }[] };
     const reply = data.choices?.[0]?.message?.content?.trim();
-    res.status(200).json({ reply: reply || "Je n'ai pas de réponse pour le moment." });
+    // Le jeton n'est renouvelé qu'en cas de succès : une erreur ne consomme pas de question.
+    res.status(200).json({
+      reply: reply || "Je n'ai pas de réponse pour le moment.",
+      session: encodeSession(check.session, secret),
+      ...sessionInfo(check.session),
+    });
   } catch (e) {
     console.error('OpenAI', e);
     res.status(502).json({ error: "L'assistant est momentanément indisponible." });

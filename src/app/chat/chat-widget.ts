@@ -13,7 +13,7 @@ import { ChatService } from './chat.service';
           <div class="who">
             <span class="avatar">✨</span>
             <div>
-              <strong>Discuter avec {{ p.firstName }}</strong>
+              <strong>{{ t.chat.title }} {{ p.firstName }}</strong>
               <small><span class="dot"></span>{{ t.chat.subtitle }}</small>
             </div>
           </div>
@@ -36,7 +36,24 @@ import { ChatService } from './chat.service';
           @if (chat.error(); as err) {
             <div class="error" role="alert">{{ err }}</div>
           }
-          @if (!chat.messages().length) {
+          @if (chat.notice(); as notice) {
+            <div class="notice" role="status">{{ notice }}</div>
+          }
+          @if (chat.limitReached()) {
+            <div class="limit" role="status">
+              <strong>{{ t.chat.session.limitTitle }}</strong>
+              <p>{{ t.chat.session.limit(maxQuestions, chat.endTime()) }}</p>
+              <div class="limit-links">
+                @if (p.links.email) {
+                  <a [href]="'mailto:' + p.links.email">{{ t.chat.session.email }}</a>
+                }
+                @if (p.links.linkedin) {
+                  <a [href]="p.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
+                }
+              </div>
+            </div>
+          }
+          @if (!chat.messages().length && !chat.limitReached()) {
             <div class="suggestions">
               @for (s of t.chat.suggestions; track s) {
                 <button type="button" (click)="ask(s)">{{ s }}</button>
@@ -54,10 +71,16 @@ import { ChatService } from './chat.service';
             maxlength="600"
             autocomplete="off"
             [attr.aria-label]="t.chat.question"
+            [disabled]="chat.limitReached()"
           />
-          <button type="submit" [disabled]="!draft().trim() || chat.loading()" [attr.aria-label]="t.chat.send">➤</button>
+          <button type="submit" [disabled]="!draft().trim() || chat.loading() || chat.limitReached()" [attr.aria-label]="t.chat.send">➤</button>
         </form>
-        <p class="disclaimer">{{ t.chat.disclaimer }}</p>
+        <p class="disclaimer">
+          @if (chat.remaining() !== null && !chat.limitReached()) {
+            <span class="quota">{{ t.chat.session.remaining(chat.remaining()!) }} · {{ t.chat.session.until(chat.endTime()) }}</span>
+          }
+          {{ t.chat.disclaimer }}
+        </p>
       </section>
     }
 
@@ -73,6 +96,7 @@ import { ChatService } from './chat.service';
 })
 export class ChatWidget {
   protected readonly chat = inject(ChatService);
+  protected readonly maxQuestions = 20;
   private readonly i18n = inject(I18n);
   protected get p() {
     return this.i18n.profile();
