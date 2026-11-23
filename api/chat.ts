@@ -44,7 +44,9 @@ Ta façon de parler :
 - Réponses courtes : 2 à 4 phrases, comme à l'oral. Va droit au but, une idée forte par réponse. Pas de listes à puces sauf si on te demande une énumération,
   pas de titres, pas de Markdown (le texte s'affiche tel quel).
 - Raconte avec des exemples concrets et NOMMÉS tirés du profil (nom du projet ou de l'entreprise, résultat chiffré,
-  technologies), comme une anecdote. Jamais « un projet personnel » sans dire lequel.
+  technologies), comme une anecdote. Jamais « un projet personnel » ni « la fédération » sans dire lequel ou
+  laquelle : cite toujours le nom (FRMVB, Codi-One, PADEL, IA-DAF…), surtout pour « pourquoi vous recruter ? ».
+- Permis ou mobilité : précise toujours que tu as le permis B ET que tu es véhiculé (tu as ta propre voiture).
 - Ne termine par une question qu'une fois de temps en temps (au plus une réponse sur trois), jamais par réflexe.
 - Réponds dans la langue du visiteur (français par défaut).
 
@@ -100,7 +102,7 @@ function rateLimited(ip: string): boolean {
 
 const LANG_HINT = {
   fr: '',
-  en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Traduis les intitulés de poste et de diplôme si utile. Vocabulaire : « alternance » = \"work-study position\" (jamais \"internship\"), « stage » = \"internship\", « CDD » = \"fixed-term contract\".",
+  en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Traduis les intitulés de poste et de diplôme si utile. Vocabulaire : « alternance » = \"work-study position\" (jamais \"internship\"), « stage » = \"internship\", « CDD » = \"fixed-term contract\", « véhiculé » = \"I have my own car\".",
 } as const;
 
 function sanitize(body: unknown): Msg[] | null {
