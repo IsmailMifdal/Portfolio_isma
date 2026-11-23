@@ -74,15 +74,22 @@ const SESSION_2 = [
   { q: 'Write me a JavaScript function that reverses a string.', lang: 'en', offTopic: true, none: [/split\(|reverse\(\)|=>/] },
 ];
 
-async function ask(q, lang, session) {
+async function ask(q, lang, session, attempt = 1) {
   const t0 = Date.now();
-  const res = await fetch(`${BASE}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: [{ role: 'user', content: q }], lang, session }),
-  });
-  const body = await res.json().catch(() => ({}));
-  return { status: res.status, body, ms: Date.now() - t0 };
+  try {
+    const res = await fetch(`${BASE}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Connection: 'close' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: q }], lang, session }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    const body = await res.json().catch(() => ({}));
+    return { status: res.status, body, ms: Date.now() - t0 };
+  } catch (e) {
+    // Réseau capricieux : une seule nouvelle tentative (la question n'a pas été comptée par le serveur).
+    if (attempt < 2) return ask(q, lang, session, attempt + 1);
+    return { status: 0, body: { error: String(e) }, ms: Date.now() - t0 };
+  }
 }
 
 function judge(c, reply) {
@@ -99,7 +106,7 @@ let failed = 0;
 const line = (ok, label, detail = '') => console.log(`${ok ? '✅' : '❌'} ${label}${detail ? `\n     ${detail}` : ''}`);
 
 async function runSession(name, cases) {
-  console.log(`\n── ${name} ──`);
+  console.log(`── ${name} ──`);
   let session = null;
   for (const c of cases) {
     const { status, body, ms } = await ask(c.q, c.lang ?? 'fr', session);
@@ -127,5 +134,5 @@ line(limitOk, '21e question de la session refusée', limitOk ? '' : `HTTP ${extr
 
 await runSession('Session 2 : sujets sensibles, hors-sujet et anglais (20 questions)', SESSION_2);
 
-console.log(`\nRésultat : ${passed} réussis, ${failed} échoués sur ${passed + failed}.`);
+console.log(`RÉSULTAT : ${passed} réussis, ${failed} échoués sur ${passed + failed}.`);
 process.exitCode = failed ? 1 : 0;
