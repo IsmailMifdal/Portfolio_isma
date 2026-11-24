@@ -105,6 +105,9 @@ const LANG_HINT = {
   en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Écris alors TOUTE la réponse en anglais, phrase de relance comprise : jamais de mélange avec le français. Traduis les intitulés de poste et de diplôme si utile. Vocabulaire : « alternance » = \"work-study position\" (jamais \"internship\"), « stage » = \"internship\", « CDD » = \"fixed-term contract\", « véhiculé » = \"I have my own car\".",
 } as const;
 
+const EN_REMINDER =
+  'Reply entirely in English, every sentence including any closing offer, unless the visitor wrote in another language. Never mix in French.';
+
 function sanitize(body: unknown): Msg[] | null {
   const raw = (body as { messages?: unknown })?.messages;
   if (!Array.isArray(raw) || raw.length === 0) return null;
@@ -175,7 +178,12 @@ export default async function handler(req: Req, res: Res): Promise<void> {
         model: process.env['OPENAI_MODEL'] || 'gpt-4o-mini',
         temperature: 0.4,
         max_tokens: 450,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT + LANG_HINT[lang] }, ...messages],
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT + LANG_HINT[lang] },
+          ...messages,
+          // Rappel placé en dernier, en anglais : sans lui le modèle finit parfois sa réponse en français.
+          ...(lang === 'en' ? [{ role: 'system', content: EN_REMINDER }] : []),
+        ],
       }),
     });
     if (!upstream.ok) {

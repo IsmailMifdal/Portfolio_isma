@@ -155,6 +155,14 @@ describe('POST /api/chat', () => {
     const system: string = JSON.parse(openai.mock.calls[0][1].body).messages[0].content;
     expect(system).toContain('réponds en anglais');
     expect(system).toContain('work-study position');
+    const sent = JSON.parse(openai.mock.calls[0][1].body).messages;
+    expect(sent.at(-1)).toEqual({ role: 'system', content: expect.stringContaining('entirely in English') });
+  });
+
+  it('n’ajoute pas de rappel en anglais sur la version française', async () => {
+    await ask('Bonjour', { lang: 'fr' });
+    const sent = JSON.parse(openai.mock.calls[0][1].body).messages;
+    expect(sent.at(-1).role).toBe('user');
   });
 
   it('rejette un corps de requête invalide', async () => {
