@@ -102,7 +102,7 @@ function rateLimited(ip: string): boolean {
 
 const LANG_HINT = {
   fr: '',
-  en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Traduis les intitulés de poste et de diplôme si utile. Vocabulaire : « alternance » = \"work-study position\" (jamais \"internship\"), « stage » = \"internship\", « CDD » = \"fixed-term contract\", « véhiculé » = \"I have my own car\".",
+  en: "\n\nLe visiteur consulte la version anglaise du site : réponds en anglais (naturel, professionnel), sauf s'il t'écrit dans une autre langue. Écris alors TOUTE la réponse en anglais, phrase de relance comprise : jamais de mélange avec le français. Traduis les intitulés de poste et de diplôme si utile. Vocabulaire : « alternance » = \"work-study position\" (jamais \"internship\"), « stage » = \"internship\", « CDD » = \"fixed-term contract\", « véhiculé » = \"I have my own car\".",
 } as const;
 
 function sanitize(body: unknown): Msg[] | null {
