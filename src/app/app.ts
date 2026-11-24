@@ -1,6 +1,7 @@
 import { Component, viewChild } from '@angular/core';
 import { ChatWidget } from './chat/chat-widget';
 import { About } from './sections/about';
+import { Certifications } from './sections/certifications';
 import { Contact } from './sections/contact';
 import { Hero } from './sections/hero';
 import { Navbar } from './sections/navbar';
@@ -10,7 +11,7 @@ import { EducationSection, ExperienceSection } from './sections/timeline';
 
 @Component({
   selector: 'app-root',
-  imports: [Navbar, Hero, About, Skills, ExperienceSection, EducationSection, Projects, Contact, ChatWidget],
+  imports: [Navbar, Hero, About, Skills, ExperienceSection, EducationSection, Certifications, Projects, Contact, ChatWidget],
   template: `
     <app-navbar />
     <main>
@@ -21,6 +22,7 @@ import { EducationSection, ExperienceSection } from './sections/timeline';
         <app-skills />
         <app-experience />
         <app-education />
+        <app-certifications />
         <app-projects />
         <app-contact (askAssistant)="assistant()?.openPanel()" />
       } @placeholder {

@@ -47,6 +47,22 @@ export interface Project {
   featured?: boolean;
 }
 
+/** Certification publiée sur LinkedIn, vérifiable en ligne (Coursera). */
+export interface Certification {
+  name: string;
+  issuer: string;
+  /** Mois d'obtention, au format MM/AAAA. */
+  date: string;
+  /** « Certificat » ou « Spécialisation » (parcours de plusieurs cours). */
+  kind: string;
+  credentialId: string;
+  url: string;
+  /** Compétences associées sur LinkedIn (seulement si elles y sont indiquées). */
+  skills?: string[];
+  /** Mise en avant dans la grille (les plus proches de mon profil : Java/Spring et DevOps). */
+  featured?: boolean;
+}
+
 export interface Profile {
   firstName: string;
   lastName: string;
@@ -62,6 +78,7 @@ export interface Profile {
   links: { github: string; linkedin?: string; email?: string; schoolEmail?: string; phone?: string; cv?: string };
   experiences: Experience[];
   education: Education[];
+  certifications: Certification[];
   skillGroups: SkillGroup[];
   architectures: { name: string; description: string }[];
   webServices: { name: string; description: string }[];
@@ -205,6 +222,70 @@ export const PROFILE: Profile = {
       school: 'Lycée Azhar',
       location: 'Casablanca, Maroc',
       period: '2018',
+    },
+  ],
+
+  // Recopiées depuis LinkedIn (« Licences et certifications »), de la plus récente à la plus ancienne.
+  certifications: [
+    {
+      name: 'Building Scalable Java Microservices with Spring Boot and Spring Cloud',
+      issuer: 'Google Cloud',
+      date: '11/2023',
+      kind: 'Certificat',
+      credentialId: 'FXCYZ555TTJZ',
+      url: 'https://www.coursera.org/account/accomplishments/certificate/FXCYZ555TTJZ',
+      featured: true,
+    },
+    {
+      name: 'Machine Learning with Python',
+      issuer: 'IBM',
+      date: '11/2023',
+      kind: 'Certificat',
+      credentialId: 'YK5KM44ULNEL',
+      url: 'https://www.coursera.org/account/accomplishments/certificate/YK5KM44ULNEL',
+    },
+    {
+      name: 'Developing Back-End Apps with Node.js and Express',
+      issuer: 'IBM',
+      date: '04/2023',
+      kind: 'Certificat',
+      credentialId: 'B4D6395QJCSW',
+      url: 'https://www.coursera.org/account/accomplishments/certificate/B4D6395QJCSW',
+    },
+    {
+      name: 'Advanced React',
+      issuer: 'Meta',
+      date: '04/2023',
+      kind: 'Certificat',
+      credentialId: 'VJP5MQ8KA3BY',
+      url: 'https://www.coursera.org/account/accomplishments/certificate/VJP5MQ8KA3BY',
+    },
+    {
+      name: 'Android App Development',
+      issuer: 'Vanderbilt University',
+      date: '03/2023',
+      kind: 'Spécialisation',
+      credentialId: 'P4XH3SCEWJ2D',
+      url: 'https://www.coursera.org/account/accomplishments/specialization/certificate/P4XH3SCEWJ2D',
+      skills: ['Android Development'],
+    },
+    {
+      name: 'IBM DevOps, Cloud, and Agile Foundations',
+      issuer: 'IBM',
+      date: '03/2023',
+      kind: 'Spécialisation',
+      credentialId: 'DGDCX2C6YK2L',
+      url: 'https://www.coursera.org/account/accomplishments/specialization/certificate/DGDCX2C6YK2L',
+      skills: ['Agile Development', 'Cloud Computing', 'DevOps'],
+      featured: true,
+    },
+    {
+      name: 'Python Functions, Files, and Dictionaries',
+      issuer: 'University of Michigan',
+      date: '09/2022',
+      kind: 'Certificat',
+      credentialId: 'DNRXEDUKKMA7',
+      url: 'https://www.coursera.org/account/accomplishments/certificate/DNRXEDUKKMA7',
     },
   ],
 
@@ -376,6 +457,12 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     '',
     '## Parcours académique',
     ...p.education.map((e) => `- ${todo(e.degree)}, ${todo(e.school)} (${todo(e.period)}). ${(e.details ?? []).map(todo).join(' ')}`),
+    '',
+    '## Certifications (vérifiables en ligne sur Coursera, publiées sur LinkedIn)',
+    ...p.certifications.map(
+      (c) =>
+        `- ${c.name} — ${c.issuer} (${c.kind}, ${c.date})${c.skills?.length ? `. Compétences : ${c.skills.join(', ')}` : ''}. Vérification : ${c.url}`,
+    ),
     '',
     '## Compétences',
     ...p.skillGroups.map((g) => `- ${g.title} : ${g.items.join(', ')}`),

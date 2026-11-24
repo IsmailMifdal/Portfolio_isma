@@ -188,6 +188,7 @@ export class Navbar {
     { href: '#competences', key: 'skills' },
     { href: '#experience', key: 'experience' },
     { href: '#formation', key: 'education' },
+    { href: '#certifications', key: 'certifications' },
     { href: '#projets', key: 'projects' },
     { href: '#contact', key: 'contact' },
   ] as const;

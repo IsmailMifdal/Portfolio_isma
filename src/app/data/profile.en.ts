@@ -213,6 +213,7 @@ export const PROFILE_EN: Profile = {
   ],
 
   assistantOnlyProjects: fr.assistantOnlyProjects,
+  certifications: fr.certifications.map((c) => ({ ...c, kind: c.kind === 'Spécialisation' ? 'Specialization' : 'Certificate' })),
 
   languages: [
     { name: 'French', level: 'Fluent (C1)' },

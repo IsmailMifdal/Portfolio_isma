@@ -39,7 +39,7 @@ describe('Portfolio', () => {
     const fixture = await renderAll();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('h1')?.textContent).toContain(PROFILE.lastName);
-    for (const id of ['accueil', 'apropos', 'competences', 'experience', 'formation', 'projets', 'contact']) {
+    for (const id of ['accueil', 'apropos', 'competences', 'experience', 'formation', 'certifications', 'projets', 'contact']) {
       expect(el.querySelector(`#${id}`), id).toBeTruthy();
     }
   });
@@ -229,6 +229,51 @@ describe('Recherche d’alternance', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toMatch(/Valbonne/);
     expect(profileAsKnowledge()).not.toMatch(/Valbonne/);
     expect(profileAsKnowledge(PROFILE_EN)).not.toMatch(/Valbonne/);
+  });
+});
+
+describe('Certifications', () => {
+  beforeEach(async () => {
+    localStorage.clear();
+    localStorage.setItem('lang', 'fr');
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+  });
+
+  it('affiche les 7 certifications, chacune avec son lien de vérification Coursera', async () => {
+    const fixture = await renderAll();
+    const section = (fixture.nativeElement as HTMLElement).querySelector('#certifications')!;
+    const cards = section.querySelectorAll('.cert');
+    expect(cards).toHaveLength(PROFILE.certifications.length);
+    expect(PROFILE.certifications).toHaveLength(7);
+    for (const [i, c] of PROFILE.certifications.entries()) {
+      const link = cards[i].querySelector<HTMLAnchorElement>('a.verify')!;
+      expect(link.href).toBe(c.url);
+      expect(link.href).toMatch(/^https:\/\/www\.coursera\.org\/account\/accomplishments\//);
+      expect(link.href).toContain(c.credentialId);
+      expect(link.rel).toContain('noopener');
+      expect(cards[i].textContent).toContain(c.name);
+    }
+  });
+
+  it('a un lien dans le menu et se traduit en anglais', async () => {
+    const fixture = await renderAll();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('a[href="#certifications"]')).toBeTruthy();
+    TestBed.inject(I18n).set('en');
+    await fixture.whenStable();
+    const text = el.querySelector('#certifications')?.textContent ?? '';
+    expect(text).toContain('Verify');
+    expect(text).toContain('Specialization');
+    expect(text).not.toContain('Spécialisation');
+  });
+
+  it('sont connues du chatbot', () => {
+    const knowledge = profileAsKnowledge();
+    expect(knowledge).toContain('## Certifications');
+    for (const c of PROFILE.certifications) expect(knowledge).toContain(c.name);
   });
 });
 
