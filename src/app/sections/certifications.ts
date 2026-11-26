@@ -29,7 +29,9 @@ const ISSUERS: Record<string, { short: string; hue: number }> = {
           @for (c of p.certifications; track c.credentialId) {
             <li class="card cert" [class.featured]="c.featured" appReveal>
               <div class="top">
-                <span class="mark" [style.--hue]="issuer(c.issuer).hue" aria-hidden="true">{{ issuer(c.issuer).short }}</span>
+                <span class="mark" [style.--hue]="issuer(c.issuer).hue" aria-hidden="true">{{
+                  issuer(c.issuer).short
+                }}</span>
                 <div class="who">
                   <span class="issuer">{{ c.issuer }}</span>
                   <span class="date">{{ t.certifications.obtained }} {{ c.date }}</span>
@@ -44,7 +46,13 @@ const ISSUERS: Record<string, { short: string; hue: number }> = {
               </div>
               <div class="foot">
                 <span class="id">{{ t.certifications.id }} {{ c.credentialId }}</span>
-                <a class="btn verify" [href]="c.url" target="_blank" rel="noopener" [attr.aria-label]="t.certifications.verifyLabel(c.name)">
+                <a
+                  class="btn verify"
+                  [href]="c.url"
+                  target="_blank"
+                  rel="noopener"
+                  [attr.aria-label]="t.certifications.verifyLabel(c.name)"
+                >
                   {{ t.certifications.verify }}
                 </a>
               </div>

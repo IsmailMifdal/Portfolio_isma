@@ -44,7 +44,12 @@ export interface Project {
   image?: string; // chemin dans /public, ex. 'projects/padel.png'
   emoji?: string; // icône de la bannière quand il n'y a pas d'image
   year?: string;
+  /** Projet phare : carte pleine largeur avec l'étiquette « Projet phare ». */
   featured?: boolean;
+  /** Carte pleine largeur sans être le projet phare (avec sa propre étiquette). */
+  wide?: boolean;
+  /** Étiquette affichée sur la bannière d'une carte pleine largeur. */
+  tag?: string;
 }
 
 /** Certification publiée sur LinkedIn, vérifiable en ligne (Coursera). */
@@ -371,6 +376,27 @@ export const PROFILE: Profile = {
       demo: 'https://padel-app-olive.vercel.app',
     },
     {
+      name: 'PR Sentinel',
+      emoji: '🛡️',
+      year: '2026',
+      wide: true,
+      tag: '🛡️ IA + DevSecOps',
+      tagline: 'Agent IA qui relit chaque pull request sous l’angle de la sécurité',
+      description:
+        'À chaque pull request, PR Sentinel lance Semgrep, Gitleaks et Trivy, puis un agent Spring AI trie les vraies failles ' +
+        'des fausses alertes, explique le risque en deux phrases et propose un correctif applicable en un clic dans GitHub. ' +
+        'Un check run bloque la fusion tant qu’une faille critique reste ouverte.',
+      highlights: [
+        'Banc de 20 PR : 12/12 failles confirmées et 0 % de fausses alertes publiées (cas de mise au point) ; sur 10 cas jamais vus : 6/6 failles, deux tiers du bruit écarté. Environ 11 s et 0,008 $ par PR.',
+        'Agent borné et « fermé par défaut » : outils plafonnés, second avis de gpt-4o sur les cas graves, une alerte non triée bloque la PR.',
+        'Sécurité de l’outil : webhook signé (HMAC), jetons GitHub limités au dépôt, secrets masqués avant l’envoi au modèle, protection contre l’injection de prompt.',
+        'Produit complet : console Angular avec connexion GitHub, abonnement Stripe, alertes Slack, RGPD ; image Docker signée (cosign).',
+      ],
+      stack: ['Java 21', 'Spring Boot', 'Spring AI', 'OpenAI', 'PostgreSQL', 'Semgrep', 'Gitleaks', 'Trivy', 'Angular', 'Stripe', 'Docker', 'GitHub Actions'],
+      repo: 'https://github.com/IsmailMifdal/PR_sesssion',
+      demo: 'https://pr-sentinel-nine.vercel.app',
+    },
+    {
       name: 'RestoVision',
       emoji: '📹',
       year: '2026',
@@ -477,7 +503,7 @@ export function profileAsKnowledge(p: Profile = PROFILE): string {
     ...([...p.projects, ...p.assistantOnlyProjects].length
       ? [...p.projects, ...p.assistantOnlyProjects].map(
           (pr) =>
-            `- ${pr.name}${pr.featured ? ' (MON PROJET PHARE, le plus abouti)' : ''}${pr.year ? ` (${pr.year})` : ''} — ${pr.tagline}. ${pr.description}` +
+            `- ${pr.name}${pr.featured ? ' (MON PROJET PHARE, le plus abouti)' : ''}${pr.tag ? ` (${pr.tag})` : ''}${pr.year ? ` (${pr.year})` : ''} — ${pr.tagline}. ${pr.description}` +
             `${pr.highlights?.length ? ` Points clés : ${pr.highlights.join(' ; ')}` : ''} Stack : ${pr.stack.join(', ')}.` +
             `${pr.repo ? ` Code : ${pr.repo}.` : ''}${pr.demo ? ` Démo : ${pr.demo}.` : ''}`,
         )

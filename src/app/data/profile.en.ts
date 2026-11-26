@@ -177,6 +177,21 @@ export const PROFILE_EN: Profile = {
     },
     {
       ...fr.projects[1],
+      tag: '🛡️ AI + DevSecOps',
+      tagline: 'AI agent that reviews every pull request for security',
+      description:
+        'On every pull request, PR Sentinel runs Semgrep, Gitleaks and Trivy, then a Spring AI agent separates real vulnerabilities ' +
+        'from false alarms, explains the risk in two sentences and suggests a one-click fix right in GitHub. ' +
+        'A check run blocks the merge while a critical vulnerability is still open.',
+      highlights: [
+        'Benchmark of 20 PRs: 12/12 vulnerabilities confirmed and 0% false alarms published (tuning cases); on 10 unseen cases: 6/6 vulnerabilities, two thirds of the noise removed. About 11 s and $0.008 per PR.',
+        'Bounded, fail-closed agent: capped tool calls, gpt-4o second opinion on severe cases, an untriaged alert blocks the PR.',
+        'Secure by design: signed webhook (HMAC), GitHub tokens scoped to the repository, secrets masked before reaching the model, prompt-injection protection.',
+        'Complete product: Angular console with GitHub sign-in, Stripe subscription, Slack alerts, GDPR; signed Docker image (cosign).',
+      ],
+    },
+    {
+      ...fr.projects[2],
       tagline: 'Computer-vision AI plugged into a restaurant’s cameras',
       description:
         'Tracks table status and the waiting line live, and alerts the staff when guests wait too long. ' +
@@ -188,7 +203,7 @@ export const PROFILE_EN: Profile = {
       ],
     },
     {
-      ...fr.projects[2],
+      ...fr.projects[3],
       tagline: 'Learning copilot: “test yourself before you learn”',
       description:
         'Upload a course (PDF or text): the AI runs an adaptive diagnostic, then teaches only the gaps with ' +
@@ -199,7 +214,7 @@ export const PROFILE_EN: Profile = {
       ],
     },
     {
-      ...fr.projects[3],
+      ...fr.projects[4],
       name: 'L’Odyssée',
       tagline: 'Gamified urban-exploration mobile app prototype',
       description:

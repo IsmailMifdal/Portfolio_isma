@@ -232,6 +232,42 @@ describe('Recherche d’alternance', () => {
   });
 });
 
+describe('Projet PR Sentinel', () => {
+  beforeEach(async () => {
+    localStorage.clear();
+    localStorage.setItem('lang', 'fr');
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+  });
+
+  it('s’affiche en grand juste après PADEL, avec son code et sa démo', async () => {
+    const fixture = await renderAll();
+    const cards = [...(fixture.nativeElement as HTMLElement).querySelectorAll('#projets .project')];
+    expect(cards[0].textContent).toContain('PADEL');
+    const card = cards[1];
+    expect(card.textContent).toContain('PR Sentinel');
+    expect(card.classList).toContain('featured');
+    expect(card.querySelector('.tag')?.textContent).toContain('IA + DevSecOps');
+    expect(card.querySelector('.tag')?.textContent).not.toContain('Projet phare');
+    const links = [...card.querySelectorAll<HTMLAnchorElement>('.links a')].map((a) => a.href);
+    expect(links).toEqual(['https://github.com/IsmailMifdal/PR_sesssion', 'https://pr-sentinel-nine.vercel.app/']);
+  });
+
+  it('garde le bon contenu anglais pour chaque projet après l’ajout', () => {
+    expect(PROFILE_EN.projects.map((p) => p.name)).toEqual(PROFILE.projects.map((p) => p.name));
+    expect(PROFILE_EN.projects[1].tagline).toContain('pull request');
+    expect(PROFILE_EN.projects[2].name).toBe('RestoVision');
+  });
+
+  it('est connu du chatbot, sans devenir un second « projet phare »', () => {
+    const knowledge = profileAsKnowledge();
+    expect(knowledge).toContain('PR Sentinel');
+    expect(knowledge.match(/MON PROJET PHARE/g)).toHaveLength(1);
+  });
+});
+
 describe('Certifications', () => {
   beforeEach(async () => {
     localStorage.clear();

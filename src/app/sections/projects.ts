@@ -19,7 +19,7 @@ import { SectionHeader } from '../shared/section-header';
         @if (p.projects.length) {
           <div class="grid">
             @for (pr of p.projects; track pr.name) {
-              <article class="card project" [class.featured]="pr.featured" appReveal>
+              <article class="card project" [class.featured]="pr.featured || pr.wide" appReveal>
                 @if (pr.image && !broken().has(pr.name)) {
                   <img [src]="pr.image" [alt]="t.projects.previewOf + ' ' + pr.name" loading="lazy" (error)="markBroken(pr.name)" />
                 } @else {
@@ -27,6 +27,8 @@ import { SectionHeader } from '../shared/section-header';
                     <span class="emoji">{{ pr.emoji ?? '🚀' }}</span>
                     @if (pr.featured) {
                       <span class="tag">{{ t.projects.featured }}</span>
+                    } @else if (pr.tag) {
+                      <span class="tag">{{ pr.tag }}</span>
                     }
                   </div>
                 }
@@ -212,13 +214,14 @@ import { SectionHeader } from '../shared/section-header';
       font-size: 14px;
       color: var(--text);
     }
-    /* Tablette (2 colonnes) : la dernière carte seule sur sa ligne prend toute la largeur */
+    /* Tablette (2 colonnes) : la dernière carte seule sur sa ligne prend toute la largeur
+       (2 cartes pleine largeur en tête : nombre impair de petites cartes = position impaire) */
     @media (min-width: 761px) and (max-width: 975px) {
-      .project:not(.featured):last-child:nth-child(even) {
+      .project:not(.featured):last-child:nth-child(odd) {
         grid-column: 1 / -1;
         flex-direction: row;
       }
-      .project:not(.featured):last-child:nth-child(even) .banner {
+      .project:not(.featured):last-child:nth-child(odd) .banner {
         flex: 0 0 38%;
         height: auto;
         min-height: 220px;
